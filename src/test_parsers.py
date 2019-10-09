@@ -1,7 +1,4 @@
-from modules import modules
-from model import IocCollection
-from typing import Dict, Any
-from api import parse
+from .api import parse
 import argparse
 from mwdblib import Malwarecage
 

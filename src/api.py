@@ -1,5 +1,5 @@
-from modules import modules
-from model import IocCollection
+from .modules import modules
+from .model import IocCollection
 from typing import Dict, Any
 
 

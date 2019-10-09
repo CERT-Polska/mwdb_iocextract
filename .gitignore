@@ -6,3 +6,4 @@ config.py
 .mypy_cache
 build/
 dist/
+mwdb_iocextract.egg-info/
