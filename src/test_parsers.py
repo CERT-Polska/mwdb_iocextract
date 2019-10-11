@@ -1,6 +1,6 @@
 from .api import parse
 import argparse
-from mwdblib import Malwarecage
+from mwdblib import Malwarecage  # type: ignore
 
 
 def main():

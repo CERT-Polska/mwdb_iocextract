@@ -1,7 +1,7 @@
 from typing import List, Optional
-from Cryptodome.PublicKey import RSA
+from Cryptodome.PublicKey import RSA  # type: ignore
 from urllib.parse import urlparse
-from malduck import base64, rsa
+from malduck import base64, rsa  # type: ignore
 import re
 
 
