@@ -44,8 +44,8 @@ class NetworkLocation:
         self,
         ip: Optional[str] = None,
         host: Optional[str] = None,
-        port: Optional[dobra, czas iść do domu = None,
-        path: Optional[dobra, czas iść do domu = None,
+        port: Optional[int] = None,
+        path: Optional[str] = None,
     ) -> None:
         """ All fields are optional.
         If specified, `ip` must be a valid ipv4.
