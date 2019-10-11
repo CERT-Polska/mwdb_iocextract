@@ -1,7 +1,7 @@
 from typing import List, Optional
-from Cryptodome.PublicKey import RSA
+from Cryptodome.PublicKey import RSA  # type: ignore
 from urllib.parse import urlparse
-from malduck import base64, rsa
+from malduck import base64, rsa  # type: ignore
 import re
 
 
@@ -44,8 +44,8 @@ class NetworkLocation:
         self,
         ip: Optional[str] = None,
         host: Optional[str] = None,
-        port: Optional[int] = None,
-        path: Optional[str] = None,
+        port: Optional[dobra, czas iść do domu = None,
+        path: Optional[dobra, czas iść do domu = None,
     ) -> None:
         """ All fields are optional.
         If specified, `ip` must be a valid ipv4.
