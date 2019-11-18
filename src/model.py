@@ -1,9 +1,10 @@
 from typing import List, Optional
-from Cryptodome.PublicKey import RSA  # type: ignore
+from Cryptodome.PublicKey import RSA
 from urllib.parse import urlparse
-from malduck import base64, rsa  # type: ignore
+from malduck import base64, rsa
 import re
 from enum import Enum
+from pymisp import MISPObject
 
 
 def is_ipv4(possible_ip: str):
@@ -49,6 +50,14 @@ class RsaKey:
         blob = base64.decode(b64)
         key = rsa.import_key(blob)
         return cls.parse_pem(key)
+
+    def to_misp(self) -> MISPObject:
+        mo = MISPObject('crypto-material', standalone=False)
+        mo.add_attribute('type', 'RSA')
+        mo.add_attribute('origin', 'malware-extraction')
+        mo.add_attribute('modulus', hex(self.n)[2:])
+        mo.add_attribute('e', self.e)
+        return mo
 
     def prettyprint(self) -> str:
         """ Pretty print for debugging """
@@ -107,6 +116,18 @@ class NetworkLocation:
 
         return cls(host=urlobj.hostname, port=urlobj.port, path=urlobj.path)
 
+    def to_misp(self) -> MISPObject:
+        obj = MISPObject('url', standalone=False)
+        if self.ip:
+            obj.add_attribute('ip', self.ip)
+        if self.domain:
+            obj.add_attribute('domain', self.domain)
+        if self.port:
+            obj.add_attribute('port', self.port)
+        if self.path:
+            obj.add_attribute('resource_path', self.path)
+        return obj
+
     def prettyprint(self) -> str:
         """ Pretty print for debugging """
         loc = ""
@@ -138,6 +159,15 @@ class IocCollection:
 
     def add_network_location(self, netloc: NetworkLocation) -> None:
         self.network_locations.append(netloc)
+
+    def to_misp(self) -> [MISPObject]:
+        """MISP JSON output"""
+        to_return = []
+        for rsa_key in self.rsa_keys:
+            to_return.append(rsa_key.to_misp())
+        for netloc in self.network_locations:
+            to_return.append(netloc.to_misp())
+        return to_return
 
     def prettyprint(self) -> str:
         """ Pretty print for debugging """
