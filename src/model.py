@@ -3,11 +3,30 @@ from Cryptodome.PublicKey import RSA  # type: ignore
 from urllib.parse import urlparse
 from malduck import base64, rsa  # type: ignore
 import re
+from enum import Enum
 
 
 def is_ipv4(possible_ip: str):
     """ Very simple heuristics to distinguish IPs from domains """
     return re.match("[0-9.]+", possible_ip)
+
+
+class LocationType(Enum):
+    """ Type of malicious URL. Not all URLs in malware have the
+    same role, and often it's necessary to treat them differently. """
+
+    # C&C server, usually administrated by criminals. Malware connects to
+    # it (usually with a custom protocol) to get new commands and updates.
+    CNC = "cnc"
+    # Download url. Used to download more malware samples. Sometimes just a
+    # hacked legitimate website.
+    DOWNLOAD_URL = "download_url"
+    # Malware panel. HTTP service used by criminals to manage the botnet.
+    PANEL = "panel"
+    # Peer. IP/port of infected machine of a legitimate computer user.
+    PEER = "peer"
+    # Other kind of URL found in the malware.
+    OTHER = "other"
 
 
 class RsaKey:
@@ -42,6 +61,7 @@ class NetworkLocation:
 
     def __init__(
         self,
+        location_type: LocationType = LocationType.CNC,
         ip: Optional[str] = None,
         host: Optional[str] = None,
         port: Optional[int] = None,
