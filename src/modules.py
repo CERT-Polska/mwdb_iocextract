@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from .model import RsaKey, NetworkLocation, IocCollection, LocationType
+from .model import RsaKey, NetworkLocation, IocCollection
 
 
 modules = {}
