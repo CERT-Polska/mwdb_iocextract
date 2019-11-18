@@ -1,10 +1,10 @@
 from typing import List, Optional
-from Cryptodome.PublicKey import RSA
+from Cryptodome.PublicKey import RSA  # type: ignore
 from urllib.parse import urlparse
-from malduck import base64, rsa
+from malduck import base64, rsa  # type: ignore
 import re
 from enum import Enum
-from pymisp import MISPObject
+from pymisp import MISPObject  # type: ignore
 
 
 def is_ipv4(possible_ip: str):
@@ -160,7 +160,7 @@ class IocCollection:
     def add_network_location(self, netloc: NetworkLocation) -> None:
         self.network_locations.append(netloc)
 
-    def to_misp(self) -> [MISPObject]:
+    def to_misp(self) -> List[MISPObject]:
         """MISP JSON output"""
         to_return = []
         for rsa_key in self.rsa_keys:
