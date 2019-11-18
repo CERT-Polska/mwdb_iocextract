@@ -105,6 +105,7 @@ class NetworkLocation:
 
         self.port = port
         self.path = path
+        self.location_type = location_type
 
     @classmethod
     def parse_url(cls, url: str):
@@ -119,9 +120,11 @@ class NetworkLocation:
     def to_misp(self) -> MISPObject:
         obj = MISPObject('url', standalone=False)
         if self.ip:
-            obj.add_attribute('ip', self.ip)
+            a = obj.add_attribute('ip', self.ip)
+            a.add_tag(f'mwdb:location_type:{self.location_type.value}')
         if self.domain:
-            obj.add_attribute('domain', self.domain)
+            a = obj.add_attribute('domain', self.domain)
+            a.add_tag(f'mwdb:location_type:{self.location_type.value}')
         if self.port:
             obj.add_attribute('port', self.port)
         if self.path:
