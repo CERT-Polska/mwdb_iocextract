@@ -52,11 +52,11 @@ class RsaKey:
         return cls.parse_pem(key)
 
     def to_misp(self) -> MISPObject:
-        mo = MISPObject('crypto-material', standalone=False)
-        mo.add_attribute('type', 'RSA')
-        mo.add_attribute('origin', 'malware-extraction')
-        mo.add_attribute('modulus', hex(self.n)[2:])
-        mo.add_attribute('e', self.e)
+        mo = MISPObject("crypto-material", standalone=False)
+        mo.add_attribute("type", "RSA")
+        mo.add_attribute("origin", "malware-extraction")
+        mo.add_attribute("modulus", hex(self.n)[2:])
+        mo.add_attribute("e", self.e)
         return mo
 
     def prettyprint(self) -> str:
@@ -118,17 +118,17 @@ class NetworkLocation:
         return cls(host=urlobj.hostname, port=urlobj.port, path=urlobj.path)
 
     def to_misp(self) -> MISPObject:
-        obj = MISPObject('url', standalone=False)
+        obj = MISPObject("url", standalone=False)
         if self.ip:
-            a = obj.add_attribute('ip', self.ip)
-            a.add_tag(f'mwdb:location_type:{self.location_type.value}')
+            a = obj.add_attribute("ip", self.ip)
+            a.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.domain:
-            a = obj.add_attribute('domain', self.domain)
-            a.add_tag(f'mwdb:location_type:{self.location_type.value}')
+            a = obj.add_attribute("domain", self.domain)
+            a.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.port:
-            obj.add_attribute('port', self.port)
+            obj.add_attribute("port", self.port)
         if self.path:
-            obj.add_attribute('resource_path', self.path)
+            obj.add_attribute("resource_path", self.path)
         return obj
 
     def prettyprint(self) -> str:
@@ -155,13 +155,25 @@ class IocCollection:
     def __init__(self) -> None:
         """ Creates an empty IocCollection instance """
         self.rsa_keys: List[RsaKey] = []
+        self.passwords: List[str] = []
         self.network_locations: List[NetworkLocation] = []
+        self.mutexes: List[str] = []
+        self.dropped_filenames: List[str] = []
 
     def add_rsa_key(self, rsakey: RsaKey) -> None:
         self.rsa_keys.append(rsakey)
 
     def add_network_location(self, netloc: NetworkLocation) -> None:
         self.network_locations.append(netloc)
+
+    def add_password(self, password: str) -> None:
+        self.passwords.append(password)
+
+    def add_drop_filename(self, filename: str) -> None:
+        self.dropped_filenames.append(filename)
+
+    def add_mutex(self, mutex: str) -> None:
+        self.mutexes.append(mutex)
 
     def to_misp(self) -> List[MISPObject]:
         """MISP JSON output"""
@@ -170,6 +182,9 @@ class IocCollection:
             to_return.append(rsa_key.to_misp())
         for netloc in self.network_locations:
             to_return.append(netloc.to_misp())
+        # TODO passwords
+        # TODO mutexes
+        # TODO drops
         return to_return
 
     def prettyprint(self) -> str:
@@ -179,4 +194,10 @@ class IocCollection:
             result.append(rsa_key.prettyprint())
         for netloc in self.network_locations:
             result.append(netloc.prettyprint())
+        for password in self.passwords:
+            result.append("Password " + password)
+        for mutex in self.mutexes:
+            result.append("Mutex " + mutex)
+        for drop_filename in self.dropped_filenames:
+            result.append("Drop " + drop_filename)
         return "\n".join(result)
