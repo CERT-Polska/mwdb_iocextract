@@ -36,7 +36,7 @@ def parse_emotet_spam(config: Dict[str, Any]) -> IocCollection:
 
 
 @module("emotet_doc")
-def parse_emotet_spam(config: Dict[str, Any]) -> IocCollection:
+def parse_emotet_doc(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for url in config.get("urls", []):
         iocs.add_network_location(NetworkLocation.parse_url(url))
