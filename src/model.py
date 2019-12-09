@@ -201,3 +201,11 @@ class IocCollection:
         for drop_filename in self.dropped_filenames:
             result.append("Drop " + drop_filename)
         return "\n".join(result)
+
+    def __bool__(self) -> bool:
+        return any([
+            self.rsa_keys,
+            self.passwords,
+            self.network_locations,
+            self.mutexes,
+            self.dropped_filenames])
