@@ -5,8 +5,14 @@ from .model import RsaKey, NetworkLocation, IocCollection
 modules = {}
 
 
+class ModuleAlreadyRegisteredError(RuntimeError):
+    pass
+
+
 def module(name):
     def decorator(func):
+        if name in modules:
+            raise ModuleAlreadyRegistered()
         modules[name] = func
         return func
 
@@ -80,7 +86,42 @@ def parse_remcos(config: Dict[str, Any]) -> IocCollection:
 def parse_brushaloader(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     if "url" in config:
-        iocs.add_network_location(NetworkLocation(host=config["url"]))
+        iocs.add_network_location(NetworkLocation.parse_url(config["url"]))
+    return iocs
+
+
+@module("ostap")
+def parse_ostap(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for url in config.get("urls", []):
+        iocs.add_network_location(NetworkLocation.parse_url(url["url"]))
+    return iocs
+
+
+@module("wshrat")
+def parse_wshrat(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for url in config.get("c2", []):
+        if url.count(":") != 1:
+            continue
+        ip, portstr = url.split(":")
+        iocs.add_network_location(NetworkLocation(ip=ip, port=int(portstr)))
+    return iocs
+
+
+@module("formbook")
+def parse_formbook(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for url in config.get("urls", []):
+        iocs.add_network_location(NetworkLocation.parse_url(url["url"]))
+    return iocs
+
+
+@module("dharma")
+def parse_dharma(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for email in config.get("emails", []):
+        iocs.add_email(email)
     return iocs
 
 
@@ -108,6 +149,15 @@ def parse_danaloader(config: Dict[str, Any]) -> IocCollection:
     return iocs
 
 
+@module("evil-pony")
+@module("pony")
+def parse_evilpony(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for url in config.get("urls", []):
+        iocs.add_network_location(NetworkLocation.parse_url(url["url"]))
+    return iocs
+
+
 @module("quasarrat")
 def parse_quasarrat(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
@@ -122,6 +172,29 @@ def parse_quasarrat(config: Dict[str, Any]) -> IocCollection:
 
     if "mutex" in config:
         iocs.add_mutex(config["mutex"])
+
+    return iocs
+
+
+@module("hawkeye")
+def parse_quasarrat(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    if "EmailUsername" in config:
+        iocs.add_email(config["EmailUsername"])
+
+    if "Mutex" in config:
+        iocs.add_mutex(config["Mutex"])
+
+    return iocs
+
+
+@module("agenttesla")
+def parse_agenttesla(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    if "email" in config:
+        iocs.add_email(config["email"])
 
     return iocs
 
@@ -154,8 +227,9 @@ def danabot(config: Dict[str, Any]) -> IocCollection:
 
 
 @module("nanocore")
-@module("agenttesla")
 @module("orcusrat")
+@module("testmod")
+@module("qakbot")
 def nothing_to_extract(config: Dict[str, Any]) -> IocCollection:
     """ Empty parser, when used it means that there's nothing useful to
     extract for this family
@@ -167,6 +241,8 @@ def nothing_to_extract(config: Dict[str, Any]) -> IocCollection:
 def parse_mirai(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for cnc in config.get("cncs", []):
+        if "host" not in cnc:
+            continue
         iocs.add_network_location(
             NetworkLocation(host=cnc["host"], port=cnc.get("port"))
         )
@@ -182,3 +258,42 @@ def parse_trickbot(config: Dict[str, Any]) -> IocCollection:
             NetworkLocation(host=cnc["cnc"], port=cnc["port"])
         )
     return iocs
+
+
+@module("emotet_upnp")
+def parse_emotetupnp(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for cnc in config.get("urls", []):
+        iocs.add_network_location(
+            NetworkLocation(host=cnc["cnc"], port=cnc["port"])
+        )
+    return iocs
+
+
+@module("smokeloader")
+def parse_smokeloader(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for cnc in config.get("domains", []):
+        iocs.add_network_location(NetworkLocation.parse_url(cnc["cnc"]))
+    return iocs
+
+
+@module("njrat")
+def parse_njrat(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for cnc in config.get("c2", []):
+        iocs.add_network_location(NetworkLocation(host=cnc))
+    if "drop_name" in cnc:
+        iocs.add_drop_filename(cnc["drop_name"])
+    return iocs
+
+
+@module("tofsee")
+def parse_tofsee(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for cnc in config.get("urls", []):
+        iocs.add_network_location(
+            NetworkLocation(host=cnc["ip"], port=cnc["port"])
+        )
+    return iocs
+
