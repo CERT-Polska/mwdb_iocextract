@@ -1,8 +1,8 @@
-from typing import Dict, Any
+from typing import Dict, Func, Any
 from .model import RsaKey, NetworkLocation, IocCollection
 
 
-modules = {}
+modules: Dict[str, Any] = {}
 
 
 class ModuleAlreadyRegisteredError(RuntimeError):
@@ -12,7 +12,7 @@ class ModuleAlreadyRegisteredError(RuntimeError):
 def module(name):
     def decorator(func):
         if name in modules:
-            raise ModuleAlreadyRegistered()
+            raise ModuleAlreadyRegisteredError()
         modules[name] = func
         return func
 
@@ -177,7 +177,7 @@ def parse_quasarrat(config: Dict[str, Any]) -> IocCollection:
 
 
 @module("hawkeye")
-def parse_quasarrat(config: Dict[str, Any]) -> IocCollection:
+def parse_hawkeye(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
 
     if "EmailUsername" in config:
@@ -296,4 +296,3 @@ def parse_tofsee(config: Dict[str, Any]) -> IocCollection:
             NetworkLocation(host=cnc["ip"], port=cnc["port"])
         )
     return iocs
-
