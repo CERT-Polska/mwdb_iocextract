@@ -1,4 +1,4 @@
-from typing import Dict, Func, Any
+from typing import Dict, Any
 from .model import RsaKey, NetworkLocation, IocCollection
 
 
