@@ -7,6 +7,10 @@ from enum import Enum
 from pymisp import MISPObject  # type: ignore
 
 
+class NotADomainOrIpError(RuntimeError):
+    pass
+
+
 def is_ipv4(possible_ip: str):
     """ Very simple heuristics to distinguish IPs from domains """
     return re.match("[0-9.]+", possible_ip)
@@ -83,6 +87,8 @@ class NetworkLocation:
         It's recommended to just specify "host" and let the class decide
         what it is (the only exception is when you know both ip and domain).
         """
+        if host is not None and "/" in host:
+            raise NotADomainOrIpError()
         self.ip = None
         self.domain = None
         if ip is None:
@@ -159,6 +165,7 @@ class IocCollection:
         self.network_locations: List[NetworkLocation] = []
         self.mutexes: List[str] = []
         self.dropped_filenames: List[str] = []
+        self.emails: List[str] = []
 
     def add_rsa_key(self, rsakey: RsaKey) -> None:
         self.rsa_keys.append(rsakey)
@@ -175,6 +182,9 @@ class IocCollection:
     def add_mutex(self, mutex: str) -> None:
         self.mutexes.append(mutex)
 
+    def add_email(self, email: str) -> None:
+        self.emails.append(email)
+
     def to_misp(self) -> List[MISPObject]:
         """MISP JSON output"""
         to_return = []
@@ -185,6 +195,7 @@ class IocCollection:
         # TODO passwords
         # TODO mutexes
         # TODO drops
+        # TODO emails
         return to_return
 
     def prettyprint(self) -> str:
@@ -200,6 +211,8 @@ class IocCollection:
             result.append("Mutex " + mutex)
         for drop_filename in self.dropped_filenames:
             result.append("Drop " + drop_filename)
+        for email in self.emails:
+            result.append("Email " + email)
         return "\n".join(result)
 
     def __bool__(self) -> bool:
