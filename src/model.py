@@ -10,7 +10,10 @@ from pymisp import MISPObject  # type: ignore
 
 def is_ipv4(possible_ip: str):
     """ Very simple heuristics to distinguish IPs from domains """
-    return re.match("[0-9.]+", possible_ip)
+    return re.match(
+        "^[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}$",
+        possible_ip,
+    )
 
 
 class LocationType(Enum):
