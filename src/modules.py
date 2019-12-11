@@ -1,12 +1,9 @@
 from typing import Dict, Any
 from .model import RsaKey, NetworkLocation, IocCollection
+from .errors import ModuleAlreadyRegisteredError
 
 
 modules: Dict[str, Any] = {}
-
-
-class ModuleAlreadyRegisteredError(RuntimeError):
-    pass
 
 
 def module(name):
