@@ -4,11 +4,8 @@ from urllib.parse import urlparse
 from malduck import base64, rsa  # type: ignore
 import re
 from enum import Enum
+from .errors import NotADomainOrIpError, InvalidNetLocError
 from pymisp import MISPObject  # type: ignore
-
-
-class NotADomainOrIpError(RuntimeError):
-    pass
 
 
 def is_ipv4(possible_ip: str):
@@ -93,18 +90,18 @@ class NetworkLocation:
         self.domain = None
         if ip is None:
             if host is None:
-                raise RuntimeError("ip or host must be specified")
+                raise InvalidNetLocError("ip or host must be specified")
             if is_ipv4(host):
                 self.ip = host
             else:
                 self.domain = host
         else:
             if not is_ipv4(ip):
-                raise RuntimeError(f"ip {ip} is not a valid ipv4 address")
+                raise InvalidNetLocError(f"{ip} is not a valid ipv4 address")
             self.ip = ip
             if host is not None:
                 if is_ipv4(host):
-                    raise RuntimeError(
+                    raise InvalidNetLocError(
                         f"when ip is specified, host must be a domain"
                     )
                 self.domain = host
