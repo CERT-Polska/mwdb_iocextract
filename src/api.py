@@ -5,18 +5,8 @@ import logging
 from .errors import FamilyNotSupportedYetError, IocExtractError
 
 
-def parse(
-    family: str, config: Dict[str, Any], raise_on_not_supported: bool = False
-) -> Optional[IocCollection]:
+def parse(family: str, config: Dict[str, Any]) -> Optional[IocCollection]:
     if family not in modules:
-        logging.warning(f"Family %s is not supported by iocextract", family)
-        if raise_on_not_supported:
-            raise FamilyNotSupportedYetError(family)
-        return None
+        raise FamilyNotSupportedYetError(family)
 
-    try:
-        return modules[family](config)
-    except IocExtractError:
-        if raise_on_not_supported:
-            raise
-        return None
+    return modules[family](config)
