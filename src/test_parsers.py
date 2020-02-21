@@ -18,7 +18,7 @@ def main():
         if cfg.type != "static":
             continue
         print(cfg.id)
-        iocs = parse(cfg.family, cfg.cfg, raise_on_not_supported=True)
+        iocs = parse(cfg.family, cfg.cfg)
         print(iocs.prettyprint())
 
 

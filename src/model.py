@@ -1,18 +1,17 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from Cryptodome.PublicKey import RSA  # type: ignore
 from urllib.parse import urlparse
 from malduck import base64, rsa  # type: ignore
 import re
 from enum import Enum
-from .errors import NotADomainOrIpError, InvalidNetLocError
+from .errors import NotADomainOrIpError, InvalidNetLocError, IocExtractError
 from pymisp import MISPObject  # type: ignore
 
 
 def is_ipv4(possible_ip: str):
     """ Very simple heuristics to distinguish IPs from domains """
     return re.match(
-        "^[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}$",
-        possible_ip,
+        "^[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}$", possible_ip
     )
 
 
@@ -114,12 +113,15 @@ class NetworkLocation:
         self.location_type = location_type
 
     @classmethod
-    def parse_url(cls, url: str):
+    def parse_url(cls, url: str) -> "NetworkLocation":
         """ Parse a url (i.e. something like "http://domain.pl:1234/path") """
-        urlobj = urlparse(url)
-        if urlobj.hostname is None:
-            # probably a missing schema - retry with a fake one
-            urlobj = urlparse("http://" + url)
+        try:
+            urlobj = urlparse(url)
+            if urlobj.hostname is None:
+                # probably a missing schema - retry with a fake one
+                urlobj = urlparse("http://" + url)
+        except ValueError:
+            raise InvalidNetLocError(f"{url} is not a valid url.")
 
         return cls(host=urlobj.hostname, port=urlobj.port, path=urlobj.path)
 
@@ -161,6 +163,7 @@ class IocCollection:
     def __init__(self) -> None:
         """ Creates an empty IocCollection instance """
         self.rsa_keys: List[RsaKey] = []
+        self.keys: List[Tuple[str, str]] = []  # hex-encoded xor keys
         self.passwords: List[str] = []
         self.network_locations: List[NetworkLocation] = []
         self.mutexes: List[str] = []
@@ -170,8 +173,51 @@ class IocCollection:
     def add_rsa_key(self, rsakey: RsaKey) -> None:
         self.rsa_keys.append(rsakey)
 
+    def add_key(self, key_type: str, xor_key: str) -> None:
+        """ Add a hex encoded other raw key - for example, xor key """
+        self.keys.append((key_type, xor_key))
+
+    def try_add_rsa_from_pem(self, pem: str) -> None:
+        try:
+            self.add_rsa_key(RsaKey.parse_pem(pem))
+        except IocExtractError:
+            pass
+
+    def try_add_rsa_from_base64(self, pem: str) -> None:
+        try:
+            self.add_rsa_key(RsaKey.parse_base64(pem))
+        except IocExtractError:
+            pass
+
     def add_network_location(self, netloc: NetworkLocation) -> None:
         self.network_locations.append(netloc)
+
+    def try_add_network_location(
+        self,
+        location_type: LocationType = LocationType.CNC,
+        ip: Optional[str] = None,
+        host: Optional[str] = None,
+        port: Optional[int] = None,
+        path: Optional[str] = None,
+    ) -> None:
+        try:
+            self.add_network_location(
+                NetworkLocation(
+                    location_type=location_type,
+                    ip=ip,
+                    host=host,
+                    port=port,
+                    path=path,
+                )
+            )
+        except IocExtractError:
+            pass
+
+    def try_add_url(self, url: str) -> None:
+        try:
+            self.network_locations.append(NetworkLocation.parse_url(url))
+        except IocExtractError:
+            pass
 
     def add_password(self, password: str) -> None:
         self.passwords.append(password)
@@ -213,12 +259,17 @@ class IocCollection:
             result.append("Drop " + drop_filename)
         for email in self.emails:
             result.append("Email " + email)
+        for key_type, key_data in self.keys:
+            result.append(f"Key {key_type}:{key_data}")
         return "\n".join(result)
 
     def __bool__(self) -> bool:
-        return any([
-            self.rsa_keys,
-            self.passwords,
-            self.network_locations,
-            self.mutexes,
-            self.dropped_filenames])
+        return any(
+            [
+                self.rsa_keys,
+                self.passwords,
+                self.network_locations,
+                self.mutexes,
+                self.dropped_filenames,
+            ]
+        )
