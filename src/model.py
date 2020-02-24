@@ -163,7 +163,7 @@ class IocCollection:
     def __init__(self) -> None:
         """ Creates an empty IocCollection instance """
         self.rsa_keys: List[RsaKey] = []
-        self.keys: List[Tuple[str, str]] = []  # hex-encoded xor keys
+        self.keys: List[Tuple[str, str]] = []  # (keytype, hexencoded key)
         self.passwords: List[str] = []
         self.network_locations: List[NetworkLocation] = []
         self.mutexes: List[str] = []
