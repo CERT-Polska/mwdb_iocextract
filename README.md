@@ -20,7 +20,7 @@ For example, compare how ISFB module reports its URls:
     {
         "cnc": "http://snezhkaie.ru"
     }
-],
+]
 ```
 
 Lokibot:
@@ -36,7 +36,7 @@ Lokibot:
     {
         "url": "alphastand.top/alien/fre.php"
     }
-],
+]
 ```
 
 And mirai:
@@ -47,7 +47,7 @@ And mirai:
         "host": "107.160.244.5",
         "port": 1024
     }
-],
+]
 ```
 
 With mwdb-iocextract you can handle all these (and dozens more) config types in the same way:
@@ -194,4 +194,6 @@ _Alternatively, depending on who you represent, you can reach out to us and we c
 
 ### Maltego integration
 
-Not public yet :).
+🤔
+
+Not public (yet?)
