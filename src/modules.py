@@ -195,7 +195,7 @@ def isfb(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     if "public_key" in config:
         pk = config["public_key"]
-        iocs.add_rsa_key(RsaKey(pk["n"], pk["e"]))
+        iocs.add_rsa_key(RsaKey(int(pk["n"]), int(pk["e"])))
 
     for domain in config.get("domains", []):
         # TODO: what about fake domains here?
@@ -322,7 +322,7 @@ def parse_zloader(config: Dict[str, Any]) -> IocCollection:
         iocs.add_key("other", config["key"])
     if "public_key" in config:
         pk = config["public_key"]
-        iocs.add_rsa_key(RsaKey(pk["n"], pk["e"]))
+        iocs.add_rsa_key(RsaKey(int(pk["n"]), int(pk["e"])))
     return iocs
 
 

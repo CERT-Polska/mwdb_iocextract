@@ -236,12 +236,13 @@ class IocCollection:
         to_return = []
         for rsa_key in self.rsa_keys:
             to_return.append(rsa_key.to_misp())
+        # TODO self.keys
+        # TODO self.passwords
         for netloc in self.network_locations:
             to_return.append(netloc.to_misp())
-        # TODO passwords
-        # TODO mutexes
-        # TODO drops
-        # TODO emails
+        # TODO self.mutexes
+        # TODO self.dropped_filenames
+        # TODO self.emails
         return to_return
 
     def prettyprint(self) -> str:
@@ -249,27 +250,29 @@ class IocCollection:
         result = []
         for rsa_key in self.rsa_keys:
             result.append(rsa_key.prettyprint())
-        for netloc in self.network_locations:
-            result.append(netloc.prettyprint())
+        for key_type, key_data in self.keys:
+            result.append(f"Key {key_type}:{key_data}")
         for password in self.passwords:
             result.append("Password " + password)
+        for netloc in self.network_locations:
+            result.append(netloc.prettyprint())
         for mutex in self.mutexes:
             result.append("Mutex " + mutex)
         for drop_filename in self.dropped_filenames:
             result.append("Drop " + drop_filename)
         for email in self.emails:
             result.append("Email " + email)
-        for key_type, key_data in self.keys:
-            result.append(f"Key {key_type}:{key_data}")
         return "\n".join(result)
 
     def __bool__(self) -> bool:
         return any(
             [
                 self.rsa_keys,
+                self.keys,
                 self.passwords,
                 self.network_locations,
                 self.mutexes,
                 self.dropped_filenames,
+                self.emails,
             ]
         )
