@@ -171,7 +171,7 @@ def parse_quasarrat(config: Dict[str, Any]) -> IocCollection:
 def parse_hawkeye(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
 
-    if "EmailUsername" in config:
+    if config.get("EmailUsername"):
         iocs.add_email(config["EmailUsername"])
 
     if "Mutex" in config:
@@ -410,4 +410,16 @@ def parse_dridex(config: Dict[str, Any]) -> IocCollection:
         iocs.try_add_url(c2)
     for key in config.get("RC4_key", []):
         iocs.add_key("rc4", key)
+    return iocs
+
+
+@module("phorpiex")
+def parse_phorpiex(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    if "cnc_url" in config:
+        iocs.try_add_url(config["cnc_url"])
+    for cnc in config.get("cncs", []):
+        iocs.try_add_network_location(host=cnc["host"], port=cnc.get("port"))
+    if "encryption_key" in config:
+        iocs.add_key("other", config["encryption_key"])
     return iocs
