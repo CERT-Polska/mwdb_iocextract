@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from .model import RsaKey, IocCollection
+from .model import LocationType, RsaKey, IocCollection
 from .errors import ModuleAlreadyRegisteredError
 
 
@@ -221,6 +221,7 @@ def danabot(config: Dict[str, Any]) -> IocCollection:
 @module("orcusrat")
 @module("testmod")
 @module("qakbot")
+@module("sodinokibi")
 def nothing_to_extract(config: Dict[str, Any]) -> IocCollection:
     """ Empty parser, when used it means that there's nothing useful to
     extract for this family
@@ -377,4 +378,26 @@ def parse_tofsee(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for cnc in config.get("urls", []):
         iocs.try_add_network_location(host=cnc["ip"], port=cnc["port"])
+    return iocs
+
+
+@module("elknot")
+def parse_elknot(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for cnc in config.get("cncs", []):
+        if "host" not in cnc:
+            continue
+        iocs.try_add_network_location(host=cnc["host"], port=cnc.get("port"))
+    return iocs
+
+
+@module("legionloader")
+def parse_legionloader(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    if "cnc" in config:
+        iocs.try_add_url(config["cnc"])
+    if "stealer" in config:
+        iocs.try_add_url(config["stealer"])
+    for drop in config.get("drops", []):
+        iocs.try_add_url(drop, location_type=LocationType.DOWNLOAD_URL)
     return iocs

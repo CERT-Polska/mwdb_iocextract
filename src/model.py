@@ -108,12 +108,21 @@ class NetworkLocation:
                     )
                 self.domain = host
 
+        self.host = self.domain or self.ip
         self.port = port
         self.path = path
         self.location_type = location_type
 
+    @property
+    def url(self):
+        port_part = f":{self.port}" if self.port else ""
+        path_part = self.path or ""
+        return self.host + port_part + path_part
+
     @classmethod
-    def parse_url(cls, url: str) -> "NetworkLocation":
+    def parse_url(
+        cls, url: str, location_type: LocationType = LocationType.CNC
+    ) -> "NetworkLocation":
         """ Parse a url (i.e. something like "http://domain.pl:1234/path") """
         try:
             urlobj = urlparse(url)
@@ -123,7 +132,12 @@ class NetworkLocation:
         except ValueError:
             raise InvalidNetLocError(f"{url} is not a valid url.")
 
-        return cls(host=urlobj.hostname, port=urlobj.port, path=urlobj.path)
+        return cls(
+            host=urlobj.hostname,
+            port=urlobj.port,
+            path=urlobj.path,
+            location_type=location_type,
+        )
 
     def to_misp(self) -> MISPObject:
         obj = MISPObject("url", standalone=False)
@@ -213,9 +227,13 @@ class IocCollection:
         except IocExtractError:
             pass
 
-    def try_add_url(self, url: str) -> None:
+    def try_add_url(
+        self, url: str, location_type: LocationType = LocationType.CNC
+    ) -> None:
         try:
-            self.network_locations.append(NetworkLocation.parse_url(url))
+            self.network_locations.append(
+                NetworkLocation.parse_url(url, location_type=location_type)
+            )
         except IocExtractError:
             pass
 

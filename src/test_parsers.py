@@ -20,6 +20,7 @@ def main():
         print(cfg.id)
         iocs = parse(cfg.family, cfg.cfg)
         print(iocs.prettyprint())
+        continue
 
 
 if __name__ == "__main__":
