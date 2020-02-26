@@ -406,8 +406,8 @@ def parse_legionloader(config: Dict[str, Any]) -> IocCollection:
 @module("dridex")
 def parse_dridex(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    if "c2" in config:
-        iocs.try_add_url(config["c2"])
+    for c2 in config.get("c2", []):
+        iocs.try_add_url(c2)
     for key in config.get("RC4_key", []):
         iocs.add_key("rc4", key)
     return iocs
