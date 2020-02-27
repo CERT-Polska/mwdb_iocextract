@@ -4,7 +4,7 @@ Python 3 library useful for getting structured IOC data from [mwdb](https://mwdb
 
 ## Why?
 
-_Warning: this project is only relevant to [mwdb](https://mwdb.cert.pl) users. Mwdb is our solution for storing and extracting malware. If you're a white-hat security researcher interested in having the access to our instance, send a request via our website or email `info@cert.pl`._
+_Warning: this project is only relevant to [mwdb](https://mwdb.cert.pl) users. Mwdb is our solution for storing and extracting malware. If you're a white-hat security researcher interested in getting access to it, send a request via our website or email `info@cert.pl`._
 
 Mwdb configs are pretty unstructured (they're basically JSONs with some additional metadata). On the other hand, automated processing often requires structured data.
 
@@ -97,10 +97,11 @@ https://pypi.org/project/mwdb-iocextract/
 
 ### Scan mwdb
 
-Most basic example can be found above.
-
-In the so-called real world, you'll probably want to get and parse
-configs directly from mwdb:
+In a typical use case, you'll probably want to get and parse configs
+downloaded directly from mwdb. To access the mwdb api and download
+recent configs we utilise the
+[mwdblib](https://github.com/CERT-Polska/mwdblib) (our official API
+bindings for [mwdb](mwdb.cert.pl)]).
 
 ```python
 from mwdb_iocextract import parse, Config
@@ -108,6 +109,7 @@ from mwdblib import Malwarecage
 
 
 def main():
+    # See also https://mwdblib.readthedocs.io/en/latest/index.html
     mwdb = Malwarecage()
     mwdb.login("msm", "my_secret_password")
 
@@ -191,9 +193,3 @@ def upload_to_misp(family, config)
 ```
 
 _Alternatively, depending on who you represent, you can reach out to us and we can discuss sharing our MISP with you._
-
-### Maltego integration
-
-🤔
-
-Not public (yet?)
