@@ -423,3 +423,31 @@ def parse_phorpiex(config: Dict[str, Any]) -> IocCollection:
     if "encryption_key" in config:
         iocs.add_key("other", config["encryption_key"])
     return iocs
+
+
+@module("pushdo")
+def parse_pushdo(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    if "cfgkey" in config:
+        key = config["cfgkey"]
+        iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"]), int(key["d"])))
+    if "privkey" in config:
+        key = config["privkey"]
+        iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"]), int(key["d"])))
+    if "pubkey" in config:
+        key = config["pubkey"]
+        iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
+    # ignore "domains", because of tons of false positives
+    return iocs
+
+
+@module("panda")
+def parse_panda(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for cnc in config.get("cnc", []):
+        iocs.try_add_url(cnc["url"])
+    if "comm_public_key" in config:
+        iocs.try_add_rsa_from_pem(config["comm_public_key"])
+    if "public_key" in config:
+        iocs.try_add_rsa_from_pem(config["public_key"])
+    return iocs
