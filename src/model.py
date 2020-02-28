@@ -36,10 +36,11 @@ class LocationType(Enum):
 class RsaKey:
     """ Represents a RSA public key used by malware"""
 
-    def __init__(self, n: int, e: int) -> None:
+    def __init__(self, n: int, e: int, d: int = None) -> None:
         """ Initialise RsaKey instance using n and e parameters directly """
         self.n = n
         self.e = e
+        self.d = d
 
     @classmethod
     def parse_pem(cls, pem: str) -> "RsaKey":
@@ -60,11 +61,14 @@ class RsaKey:
         mo.add_attribute("origin", "malware-extraction")
         mo.add_attribute("modulus", hex(self.n)[2:])
         mo.add_attribute("e", self.e)
+        if self.d is not None:
+            mo.add_attribute("d", self.d)
         return mo
 
     def prettyprint(self) -> str:
         """ Pretty print for debugging """
-        return f"RsaKey n={self.n} e={self.e}"
+        d_part = f" d={self.d}" if self.d else ""
+        return f"RsaKey n={self.n} e={self.e}{d_part}"
 
 
 class NetworkLocation:
