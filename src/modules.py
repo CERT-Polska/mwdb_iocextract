@@ -279,6 +279,8 @@ def parse_guloader(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     if "url" in config:
         iocs.try_add_url(config["url"])
+    for url in config.get("urls", []):
+        iocs.try_add_url(url["url"])
     if "key" in config:
         iocs.add_key("xor", config["key"])
     return iocs
