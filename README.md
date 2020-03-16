@@ -104,7 +104,7 @@ recent configs we utilise the
 bindings for [mwdb](mwdb.cert.pl)]).
 
 ```python
-from mwdb_iocextract import parse, Config
+from mwdb_iocextract import parse
 from mwdblib import Malwarecage
 
 
