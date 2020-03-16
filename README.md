@@ -169,7 +169,7 @@ iocs.emails  # emails used by malware
 You can convert `IocCollection` to a MISP object:
 
 ```python
-def upload_to_misp(family, config)
+def upload_to_misp(family, config):
     try:
         iocs = parse(family, config)
     except FamilyNotSupportedYetError:
