@@ -451,3 +451,32 @@ def parse_panda(config: Dict[str, Any]) -> IocCollection:
     if "public_key" in config:
         iocs.try_add_rsa_from_pem(config["public_key"])
     return iocs
+
+@module("vjworm")
+def parse_vjworm(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    if "urls" in config:
+        for urls in config.get("urls", []):
+            iocs.try_add_url(urls["url"])
+
+    return iocs
+
+@module("nymaim")
+def parse_nymaim(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    if "urls" in config:
+        print(config["urls"])
+        for url in config["urls"]:
+            iocs.try_add_url(url)
+
+    return iocs
+
+@module("globeimposter")
+def parse_nymaim(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    if "urls" in config:
+        print(config["urls"])
+        for url in config["urls"]:
+            iocs.try_add_url(url)
+
+    return iocs
