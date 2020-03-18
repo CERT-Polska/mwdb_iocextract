@@ -16,7 +16,6 @@ def main():
     mwdb.login(args.mwdb_user, args.mwdb_pass)
 
     if args.config:
-        print(args.config)
         cfg = mwdb.query_config(args.config)
         iocs = parse(cfg.family, cfg.cfg)
         print(iocs.prettyprint())

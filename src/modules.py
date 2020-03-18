@@ -222,6 +222,7 @@ def danabot(config: Dict[str, Any]) -> IocCollection:
 @module("testmod")
 @module("qakbot")
 @module("sodinokibi")
+@module("citadel")
 def nothing_to_extract(config: Dict[str, Any]) -> IocCollection:
     """ Empty parser, when used it means that there's nothing useful to
     extract for this family
@@ -455,28 +456,88 @@ def parse_panda(config: Dict[str, Any]) -> IocCollection:
 @module("vjworm")
 def parse_vjworm(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    if "urls" in config:
-        for urls in config.get("urls", []):
-            iocs.try_add_url(urls["url"])
+    for urls in config.get("urls", []):
+        iocs.try_add_url(urls["url"])
 
     return iocs
+
 
 @module("nymaim")
 def parse_nymaim(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
+    if "encryption_key" in config:
+        iocs.add_key("encryption_key", config["encryption_key"])
+    if "public_key" in config:
+        key = config["public_key"]
+        iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
+    for url in config["urls"]:
+        iocs.try_add_url(url)
+
+    return iocs
+
+
+@module("globeimposter")
+def parse_globeimposter(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    for email in config.get("emails", []):
+        iocs.add_email(email)
+    if "ransom_message" in config:
+        iocs.add_ransom_message(config["ransom_message"])
+    for url in config["urls"]:
+        iocs.try_add_url(url)
+
+    return iocs
+
+
+@module("gootkit")
+def parse_gootkit(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for domain in config.get("domains", []):
+        iocs.try_add_url(domain["cnc"])
+
+    return iocs
+
+
+@module("hancitor")
+def parse_hancitor(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for urls in config.get("urls", []):
+        iocs.try_add_url(urls["url"])
+
+    return iocs
+
+
+@module("zeus")
+def parse_zeus(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    if "rc4sbox" in config:
+        iocs.add_key("rc4sbox", config["rc4sbox"])
+    if "cnc" in config:
+        iocs.try_add_url(config["cnc"])
     if "urls" in config:
-        print(config["urls"])
         for url in config["urls"]:
             iocs.try_add_url(url)
 
     return iocs
 
-@module("globeimposter")
-def parse_nymaim(config: Dict[str, Any]) -> IocCollection:
+
+@module("vmzeus")
+def parse_vmzeus(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    if "urls" in config:
-        print(config["urls"])
-        for url in config["urls"]:
-            iocs.try_add_url(url)
+    if "rc4sbox" in config:
+        iocs.add_key("rc4sbox", config["rc4sbox"])
+    if "rc4sbox" in config:
+        iocs.add_key("rc6sbox", config["rc6sbox"])
+    for url in config["urls"]:
+        iocs.try_add_url(url)
+
+    return iocs
+
+
+@module("sendsafe")
+def parse_sendsafe(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    iocs.try_add_network_location(host=config["cnc"], port=int(config["http_port"]))
 
     return iocs

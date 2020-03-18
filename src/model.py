@@ -187,6 +187,7 @@ class IocCollection:
         self.mutexes: List[str] = []
         self.dropped_filenames: List[str] = []
         self.emails: List[str] = []
+        self.ransom_messages: List[str] = []
 
     def add_rsa_key(self, rsakey: RsaKey) -> None:
         self.rsa_keys.append(rsakey)
@@ -253,6 +254,9 @@ class IocCollection:
     def add_email(self, email: str) -> None:
         self.emails.append(email)
 
+    def add_ransom_message(self, ransom_message: str) -> None:
+        self.ransom_messages.append(ransom_message)
+
     def to_misp(self) -> List[MISPObject]:
         """MISP JSON output"""
         to_return = []
@@ -284,6 +288,8 @@ class IocCollection:
             result.append("Drop " + drop_filename)
         for email in self.emails:
             result.append("Email " + email)
+        for ransom_message in self.ransom_messages:
+            result.append("Ransom message: " + ransom_message)
         return "\n".join(result)
 
     def __bool__(self) -> bool:
