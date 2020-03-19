@@ -451,9 +451,18 @@ def parse_panda(config: Dict[str, Any]) -> IocCollection:
     for cnc in config.get("cnc", []):
         iocs.try_add_url(cnc["url"])
     if "comm_public_key" in config:
-        iocs.try_add_rsa_from_pem(config["comm_public_key"])
+        if type(config["comm_public_key"]) == str:
+            iocs.try_add_rsa_from_pem(config["comm_public_key"])
+        elif type(config["comm_public_key"]) == dict:
+            key = config["comm_public_key"]
+            iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
+
     if "public_key" in config:
-        iocs.try_add_rsa_from_pem(config["public_key"])
+        if type(config["public_key"]) == str:
+            iocs.try_add_rsa_from_pem(config["public_key"])
+        elif type(config["public_key"]) == dict:
+            key = config["public_key"]
+            iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
 
     return iocs
 
