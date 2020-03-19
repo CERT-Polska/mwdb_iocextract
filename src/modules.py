@@ -223,6 +223,9 @@ def danabot(config: Dict[str, Any]) -> IocCollection:
 @module("qakbot")
 @module("sodinokibi")
 @module("citadel")
+@module("madness_pro")
+@module("onliner")
+@module("unknown")
 def nothing_to_extract(config: Dict[str, Any]) -> IocCollection:
     """ Empty parser, when used it means that there's nothing useful to
     extract for this family
@@ -451,7 +454,9 @@ def parse_panda(config: Dict[str, Any]) -> IocCollection:
         iocs.try_add_rsa_from_pem(config["comm_public_key"])
     if "public_key" in config:
         iocs.try_add_rsa_from_pem(config["public_key"])
+
     return iocs
+
 
 @module("vjworm")
 def parse_vjworm(config: Dict[str, Any]) -> IocCollection:
@@ -484,8 +489,9 @@ def parse_globeimposter(config: Dict[str, Any]) -> IocCollection:
         iocs.add_email(email)
     if "ransom_message" in config:
         iocs.add_ransom_message(config["ransom_message"])
-    for url in config["urls"]:
-        iocs.try_add_url(url)
+    if "urls" in config:
+        for url in config["urls"]:
+            iocs.try_add_url(url)
 
     return iocs
 
@@ -541,3 +547,155 @@ def parse_sendsafe(config: Dict[str, Any]) -> IocCollection:
     iocs.try_add_network_location(host=config["cnc"], port=int(config["http_port"]))
 
     return iocs
+
+
+@module("necurs")
+def parse_necurs(config: Dict[str,Any]) -> IocCollection:
+    iocs = IocCollection()
+    for domain in config.get("domains", []):
+        iocs.try_add_url(domain["cnc"])
+    if "c2_public_key" in config:
+        key = config["c2_public_key"]
+        if type(key) == dict:
+            iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
+        elif type(key) == str:
+            iocs.add_key("c2_public_key", config["c2_public_key"])
+
+    if "mutex" in config:
+        iocs.add_mutex(str(config["mutex"]))
+
+    return iocs
+
+
+@module("troldesh")
+def parse_troldesh(config: Dict[str,Any]) -> IocCollection:
+    iocs = IocCollection()
+    iocs.try_add_url(config["url"])
+
+    return iocs
+
+
+@module("xagent")
+def parse_xagent(config: Dict[str,Any]) -> IocCollection:
+    iocs = IocCollection()
+    for url in config["urls"]:
+        iocs.try_add_url(url)
+
+    return iocs
+
+
+@module("gluedropper")
+def parse_gluedropper(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for domain in config.get("host", []):
+        iocs.try_add_url(domain)
+
+    return iocs
+
+
+@module("neutrino")
+def parse_neutrino(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    if "urls" in config:
+        for url in config["urls"]:
+            iocs.try_add_url(url)
+
+    return iocs
+
+
+@module("tinba")
+def parse_neutrino(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    return iocs
+
+
+@module("locky")
+def parse_locky(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for domain in config.get("domains", []):
+        iocs.try_add_url(domain["cnc"])
+    for payment_domain in config["payment_domain"]:
+        iocs.try_add_url(payment_domain)
+    if "public_key" in config:
+        key = config["public_key"]
+        iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
+
+    return iocs
+
+
+@module("kovter")
+def parse_kovter(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    if "public_key" in config:
+        key = config["public_key"]
+        iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
+    for url in config.get("urls", []):
+        iocs.try_add_network_location(host=url["cnc"], port=int(url["port"]))
+    if "rc4key" in config:
+        iocs.add_key("rc4key", config["rc4key"])
+
+    return iocs
+
+
+@module("cerber")
+def parse_cerber(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for dpurl in config["default_payment_url"]:
+        iocs.try_add_url(dpurl)
+    if "global_public_key" in config:
+        iocs.add_key("global_public_key", config["global_public_key"])
+
+    return iocs
+
+
+@module("quantloader")
+def parse_quentloader(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for url in config.get("urls", []):
+        iocs.try_add_url(url["url"])
+    if "key" in config:
+        iocs.add_key("key", config["key"])
+
+    return iocs
+
+
+@module("kbot")
+def parse_kbot(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for domain in config.get("domains", []):
+        iocs.try_add_url(domain["cnc"])
+    if "serverpub" in config:
+        iocs.add_key("serverpubkey", config["serverpub"])
+    if "botcommunity" in config:
+        iocs.add_campaign_id(config["botcommunity"])
+
+    return iocs
+
+
+@module("chthonic")
+def parse_chthonic(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for url in config["urls"]:
+        iocs.try_add_url(url)
+
+    return iocs
+
+
+@module("retefe")
+def parse_retefe(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for url in config["urls"]:
+        iocs.try_add_url(url)
+
+    return iocs
+
+
+@module("gandcrab")
+def parse_gandcrab(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    for domain in config.get("domains", []):
+        iocs.try_add_url(domain["cnc"])
+
+    return iocs
+

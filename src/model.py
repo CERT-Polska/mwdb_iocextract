@@ -188,6 +188,7 @@ class IocCollection:
         self.dropped_filenames: List[str] = []
         self.emails: List[str] = []
         self.ransom_messages: List[str] = []
+        self.campaign_ids: List[str] = []
 
     def add_rsa_key(self, rsakey: RsaKey) -> None:
         self.rsa_keys.append(rsakey)
@@ -198,7 +199,8 @@ class IocCollection:
 
     def try_add_rsa_from_pem(self, pem: str) -> None:
         try:
-            self.add_rsa_key(RsaKey.parse_pem(pem))
+            if pem:
+                self.add_rsa_key(RsaKey.parse_pem(pem))
         except IocExtractError:
             pass
 
@@ -257,6 +259,9 @@ class IocCollection:
     def add_ransom_message(self, ransom_message: str) -> None:
         self.ransom_messages.append(ransom_message)
 
+    def add_campaign_id(self, campaign_id: str) -> None:
+        self.campaign_ids.append(campaign_id)
+
     def to_misp(self) -> List[MISPObject]:
         """MISP JSON output"""
         to_return = []
@@ -290,6 +295,8 @@ class IocCollection:
             result.append("Email " + email)
         for ransom_message in self.ransom_messages:
             result.append("Ransom message: " + ransom_message)
+        for campaign_id in self.campaign_ids:
+            result.append("Campaign id: " + campaign_id)
         return "\n".join(result)
 
     def __bool__(self) -> bool:
@@ -302,5 +309,7 @@ class IocCollection:
                 self.mutexes,
                 self.dropped_filenames,
                 self.emails,
+                self.ransom_messages,
+                self.campaign_ids
             ]
         )
