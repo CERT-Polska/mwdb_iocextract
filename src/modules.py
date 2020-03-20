@@ -479,7 +479,7 @@ def parse_vjworm(config: Dict[str, Any]) -> IocCollection:
 def parse_nymaim(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     if "encryption_key" in config:
-        iocs.add_key("encryption_key", config["encryption_key"])
+        iocs.add_key("other", config["encryption_key"])
     if "public_key" in config:
         key = config["public_key"]
         iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
@@ -495,9 +495,8 @@ def parse_globeimposter(config: Dict[str, Any]) -> IocCollection:
         iocs.add_email(email)
     if "ransom_message" in config:
         iocs.add_ransom_message(config["ransom_message"])
-    if "urls" in config:
-        for url in config["urls"]:
-            iocs.try_add_url(url)
+    for url in config.get("urls", []):
+        iocs.try_add_url(url)
     return iocs
 
 
@@ -520,7 +519,7 @@ def parse_hancitor(config: Dict[str, Any]) -> IocCollection:
 @module("zeus")
 def parse_zeus(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    if "rc4sbox" in config:
+    if "rc4" in config:
         iocs.add_key("rc4sbox", config["rc4sbox"])
     if "cnc" in config:
         iocs.try_add_url(config["cnc"])
@@ -632,7 +631,7 @@ def parse_kovter(config: Dict[str, Any]) -> IocCollection:
 @module("cerber")
 def parse_cerber(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    for dpurl in config["default_payment_url"]:
+    for dpurl in config.get("default_payment_url", []):
         iocs.try_add_url(dpurl)
     if "global_public_key" in config:
         iocs.add_key("global_public_key", config["global_public_key"])
@@ -645,7 +644,7 @@ def parse_quentloader(config: Dict[str, Any]) -> IocCollection:
     for url in config.get("urls", []):
         iocs.try_add_url(url["url"])
     if "key" in config:
-        iocs.add_key("key", config["key"])
+        iocs.add_key("other", config["key"])
     return iocs
 
 
@@ -655,7 +654,7 @@ def parse_kbot(config: Dict[str, Any]) -> IocCollection:
     for domain in config.get("domains", []):
         iocs.try_add_url(domain["cnc"])
     if "serverpub" in config:
-        iocs.add_key("serverpubkey", config["serverpub"])
+        iocs.add_key("other", config["serverpub"])
     if "botcommunity" in config:
         iocs.add_campaign_id(config["botcommunity"])
     return iocs
@@ -664,7 +663,7 @@ def parse_kbot(config: Dict[str, Any]) -> IocCollection:
 @module("chthonic")
 def parse_chthonic(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    for url in config["urls"]:
+    for url in config.get("urls", []):
         iocs.try_add_url(url)
     return iocs
 
@@ -672,7 +671,7 @@ def parse_chthonic(config: Dict[str, Any]) -> IocCollection:
 @module("retefe")
 def parse_retefe(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    for url in config["urls"]:
+    for url in config.get("urls", []):
         iocs.try_add_url(url)
     return iocs
 

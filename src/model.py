@@ -294,9 +294,9 @@ class IocCollection:
         for email in self.emails:
             result.append("Email " + email)
         for ransom_message in self.ransom_messages:
-            result.append("Ransom message: " + ransom_message)
+            result.append("RansomMessage: " + ransom_message)
         for campaign_id in self.campaign_ids:
-            result.append("Campaign id: " + campaign_id)
+            result.append("CampaignId: " + campaign_id)
         return "\n".join(result)
 
     def __bool__(self) -> bool:
