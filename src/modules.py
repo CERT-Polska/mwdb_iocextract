@@ -472,7 +472,6 @@ def parse_vjworm(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for urls in config.get("urls", []):
         iocs.try_add_url(urls["url"])
-
     return iocs
 
 
@@ -486,14 +485,12 @@ def parse_nymaim(config: Dict[str, Any]) -> IocCollection:
         iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
     for url in config["urls"]:
         iocs.try_add_url(url)
-
     return iocs
 
 
 @module("globeimposter")
 def parse_globeimposter(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-
     for email in config.get("emails", []):
         iocs.add_email(email)
     if "ransom_message" in config:
@@ -501,7 +498,6 @@ def parse_globeimposter(config: Dict[str, Any]) -> IocCollection:
     if "urls" in config:
         for url in config["urls"]:
             iocs.try_add_url(url)
-
     return iocs
 
 
@@ -510,7 +506,6 @@ def parse_gootkit(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for domain in config.get("domains", []):
         iocs.try_add_url(domain["cnc"])
-
     return iocs
 
 
@@ -519,7 +514,6 @@ def parse_hancitor(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for urls in config.get("urls", []):
         iocs.try_add_url(urls["url"])
-
     return iocs
 
 
@@ -533,7 +527,6 @@ def parse_zeus(config: Dict[str, Any]) -> IocCollection:
     if "urls" in config:
         for url in config["urls"]:
             iocs.try_add_url(url)
-
     return iocs
 
 
@@ -546,7 +539,6 @@ def parse_vmzeus(config: Dict[str, Any]) -> IocCollection:
         iocs.add_key("rc6sbox", config["rc6sbox"])
     for url in config["urls"]:
         iocs.try_add_url(url)
-
     return iocs
 
 
@@ -554,7 +546,6 @@ def parse_vmzeus(config: Dict[str, Any]) -> IocCollection:
 def parse_sendsafe(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     iocs.try_add_network_location(host=config["cnc"], port=int(config["http_port"]))
-
     return iocs
 
 
@@ -569,10 +560,8 @@ def parse_necurs(config: Dict[str,Any]) -> IocCollection:
             iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
         elif type(key) == str:
             iocs.add_key("c2_public_key", config["c2_public_key"])
-
     if "mutex" in config:
         iocs.add_mutex(str(config["mutex"]))
-
     return iocs
 
 
@@ -580,7 +569,6 @@ def parse_necurs(config: Dict[str,Any]) -> IocCollection:
 def parse_troldesh(config: Dict[str,Any]) -> IocCollection:
     iocs = IocCollection()
     iocs.try_add_url(config["url"])
-
     return iocs
 
 
@@ -589,7 +577,6 @@ def parse_xagent(config: Dict[str,Any]) -> IocCollection:
     iocs = IocCollection()
     for url in config["urls"]:
         iocs.try_add_url(url)
-
     return iocs
 
 
@@ -598,7 +585,6 @@ def parse_gluedropper(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for domain in config.get("host", []):
         iocs.try_add_url(domain)
-
     return iocs
 
 
@@ -608,14 +594,12 @@ def parse_neutrino(config: Dict[str, Any]) -> IocCollection:
     if "urls" in config:
         for url in config["urls"]:
             iocs.try_add_url(url)
-
     return iocs
 
 
 @module("tinba")
 def parse_neutrino(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-
     return iocs
 
 
@@ -629,7 +613,6 @@ def parse_locky(config: Dict[str, Any]) -> IocCollection:
     if "public_key" in config:
         key = config["public_key"]
         iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
-
     return iocs
 
 
@@ -643,7 +626,6 @@ def parse_kovter(config: Dict[str, Any]) -> IocCollection:
         iocs.try_add_network_location(host=url["cnc"], port=int(url["port"]))
     if "rc4key" in config:
         iocs.add_key("rc4key", config["rc4key"])
-
     return iocs
 
 
@@ -654,7 +636,6 @@ def parse_cerber(config: Dict[str, Any]) -> IocCollection:
         iocs.try_add_url(dpurl)
     if "global_public_key" in config:
         iocs.add_key("global_public_key", config["global_public_key"])
-
     return iocs
 
 
@@ -665,7 +646,6 @@ def parse_quentloader(config: Dict[str, Any]) -> IocCollection:
         iocs.try_add_url(url["url"])
     if "key" in config:
         iocs.add_key("key", config["key"])
-
     return iocs
 
 
@@ -678,7 +658,6 @@ def parse_kbot(config: Dict[str, Any]) -> IocCollection:
         iocs.add_key("serverpubkey", config["serverpub"])
     if "botcommunity" in config:
         iocs.add_campaign_id(config["botcommunity"])
-
     return iocs
 
 
@@ -687,7 +666,6 @@ def parse_chthonic(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for url in config["urls"]:
         iocs.try_add_url(url)
-
     return iocs
 
 
@@ -696,7 +674,6 @@ def parse_retefe(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for url in config["urls"]:
         iocs.try_add_url(url)
-
     return iocs
 
 
@@ -705,6 +682,5 @@ def parse_gandcrab(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for domain in config.get("domains", []):
         iocs.try_add_url(domain["cnc"])
-
     return iocs
 
