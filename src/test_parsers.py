@@ -9,18 +9,25 @@ def main():
     )
     parser.add_argument("mwdb_user", help="Mwdb username")
     parser.add_argument("mwdb_pass", help="Mwdb password")
+    parser.add_argument("config", nargs="?", help="Config", default="")
     args = parser.parse_args()
 
     mwdb = Malwarecage()
     mwdb.login(args.mwdb_user, args.mwdb_pass)
 
-    for cfg in mwdb.recent_configs():
-        if cfg.type != "static":
-            continue
-        print(cfg.id)
+    if args.config:
+        cfg = mwdb.query_config(args.config)
         iocs = parse(cfg.family, cfg.cfg)
         print(iocs.prettyprint())
-        continue
+
+    else:
+        for cfg in mwdb.recent_configs():
+            if cfg.type != "static":
+                continue
+            print(cfg.id)
+            iocs = parse(cfg.family, cfg.cfg)
+            print(iocs.prettyprint())
+            continue
 
 
 if __name__ == "__main__":
