@@ -147,10 +147,12 @@ class NetworkLocation:
         obj = MISPObject("url", standalone=False)
         if self.ip:
             a = obj.add_attribute("ip", self.ip)
-            a.add_tag(f"mwdb:location_type:{self.location_type.value}")
+            if a is not None:
+                a.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.domain:
             a = obj.add_attribute("domain", self.domain)
-            a.add_tag(f"mwdb:location_type:{self.location_type.value}")
+            if a is not None:
+                a.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.port:
             obj.add_attribute("port", self.port)
         if self.path:

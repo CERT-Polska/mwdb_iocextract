@@ -544,12 +544,14 @@ def parse_vmzeus(config: Dict[str, Any]) -> IocCollection:
 @module("sendsafe")
 def parse_sendsafe(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    iocs.try_add_network_location(host=config["cnc"], port=int(config["http_port"]))
+    if "cnc" in config and "http_port" in config:
+        iocs.try_add_network_location(host=config["cnc"],
+                                      port=int(config["http_port"]))
     return iocs
 
 
 @module("necurs")
-def parse_necurs(config: Dict[str,Any]) -> IocCollection:
+def parse_necurs(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for domain in config.get("domains", []):
         iocs.try_add_url(domain["cnc"])
@@ -565,14 +567,15 @@ def parse_necurs(config: Dict[str,Any]) -> IocCollection:
 
 
 @module("troldesh")
-def parse_troldesh(config: Dict[str,Any]) -> IocCollection:
+def parse_troldesh(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    iocs.try_add_url(config["url"])
+    if "url" in config:
+        iocs.try_add_url(config["url"])
     return iocs
 
 
 @module("xagent")
-def parse_xagent(config: Dict[str,Any]) -> IocCollection:
+def parse_xagent(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for url in config.get("urls", []):
         iocs.try_add_url(url)
@@ -591,7 +594,7 @@ def parse_gluedropper(config: Dict[str, Any]) -> IocCollection:
 def parse_neutrino(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for url in config.get("urls", []):
-            iocs.try_add_url(url)
+        iocs.try_add_url(url)
     return iocs
 
 
