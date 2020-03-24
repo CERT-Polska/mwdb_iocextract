@@ -269,11 +269,24 @@ class IocCollection:
         to_return = []
         for rsa_key in self.rsa_keys:
             to_return.append(rsa_key.to_misp())
-        # TODO self.keys
-        # TODO self.passwords
+        if self.keys:
+            crypto_obj = MISPObject("crypto-material", standalone=False)
+            for k in self.keys:
+                crypto_obj.add_attribute("type", k[0])
+                crypto_obj.add_attribute("generic-symmetric-key", k[1])
+                to_return.append(crypto_obj)
+        if self.passwords:
+            credential_obj = MISPObject("credential", standalone=False)
+            for password in self.passwords:
+                credential_obj.add_attribute("password", password)
+                to_return.append(credential_obj)
+        if self.mutexes:
+            mutex_obj = MISPObject("mutex", standalone=False)
+            for mutex in self.mutexes:
+                mutex_obj.add_attribute("name", mutex)
+                to_return.append(mutex_obj)
         for netloc in self.network_locations:
             to_return.append(netloc.to_misp())
-        # TODO self.mutexes
         # TODO self.dropped_filenames
         # TODO self.emails
         return to_return
