@@ -272,7 +272,7 @@ class IocCollection:
         if self.keys:
             crypto_obj = MISPObject("crypto-material", standalone=False)
             for k in self.keys:
-                crypto_obj.add_attribute("type", "other")
+                crypto_obj.add_attribute("type", k[0])
                 crypto_obj.add_attribute("generic-symmetric-key", k[1])
                 to_return.append(crypto_obj)
         if self.passwords:
