@@ -322,6 +322,8 @@ class IocCollection:
         result = []
         for rsa_key in self.rsa_keys:
             result.append(rsa_key.prettyprint())
+        for ecdsa_curve in self.ecdsa_curves:
+            result.append(ecdsa_curve.prettyprint())
         for key_type, key_data in self.keys:
             result.append(f"Key {key_type}:{key_data}")
         for password in self.passwords:
