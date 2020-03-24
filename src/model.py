@@ -71,6 +71,26 @@ class RsaKey:
         return f"RsaKey n={self.n} e={self.e}{d_part}"
 
 
+class EcdsaCurve:
+    """ Represents a ECDSA curve used by malware"""
+
+    def __init__(self, t: str, x: str, y: str) -> None:
+        self.t = t
+        self.x = x
+        self.y = y
+
+    def to_misp(self) -> MISPObject:
+        co = MISPObject("crypto-material", standalone=False)
+        co.add_attribute("type", "ECDSA")
+        co.add_attribute("ecdsa-type", self.t)
+        co.add_attribute("x", self.x)
+        co.add_attribute("y", self.y)
+        return co
+
+    def prettyprint(self) -> str:
+        return f"EcdsaCurve t={self.t} x={self.x} y={self.y}"
+
+
 class NetworkLocation:
     """ Represents a network location. Can be a domain, ip with a port, etc.
     """
@@ -183,6 +203,7 @@ class IocCollection:
     def __init__(self) -> None:
         """ Creates an empty IocCollection instance """
         self.rsa_keys: List[RsaKey] = []
+        self.ecdsa_curves: List[EcdsaCurve] = []
         self.keys: List[Tuple[str, str]] = []  # (keytype, hexencoded key)
         self.passwords: List[str] = []
         self.network_locations: List[NetworkLocation] = []
@@ -194,6 +215,9 @@ class IocCollection:
 
     def add_rsa_key(self, rsakey: RsaKey) -> None:
         self.rsa_keys.append(rsakey)
+
+    def add_ecdsa_curve(self, ecdsa_curve: EcdsaCurve) -> None:
+        self.ecdsa_curves.append(ecdsa_curve)
 
     def add_key(self, key_type: str, xor_key: str) -> None:
         """ Add a hex encoded other raw key - for example, xor key """
@@ -269,6 +293,8 @@ class IocCollection:
         to_return = []
         for rsa_key in self.rsa_keys:
             to_return.append(rsa_key.to_misp())
+        for ecdsa_curve in self.ecdsa_curves:
+            to_return.append(ecdsa_curve.to_misp())
         if self.keys:
             crypto_obj = MISPObject("crypto-material", standalone=False)
             for k in self.keys:

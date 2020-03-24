@@ -1,6 +1,6 @@
 import argparse
-from cgi import log
-from pymisp import MISPEvent, PyMISP, MISPObject
+from distutils.log import log
+from pymisp import MISPEvent, PyMISP
 from .errors import FamilyNotSupportedYetError
 from mwdblib import Malwarecage  # type: ignore
 from .api import parse
