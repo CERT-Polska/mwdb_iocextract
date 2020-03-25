@@ -74,7 +74,7 @@ class RsaKey:
 class EcdsaCurve:
     """ Represents a ECDSA curve used by malware"""
 
-    def __init__(self, t: str, x: str, y: str) -> None:
+    def __init__(self, t: str, x: int, y: int) -> None:
         self.t = t
         self.x = x
         self.y = y
@@ -82,13 +82,16 @@ class EcdsaCurve:
     def to_misp(self) -> MISPObject:
         co = MISPObject("crypto-material", standalone=False)
         co.add_attribute("type", "ECDSA")
-        co.add_attribute("ecdsa-type", self.t)
+        if self.t == "ecdsa_pub_p384":
+            co.add_attribute("ecdsa-type", "NIST P-384")
+        else:
+            co.add_attribute("ecdsa-type", self.t)
         co.add_attribute("x", self.x)
         co.add_attribute("y", self.y)
         return co
 
     def prettyprint(self) -> str:
-        return f"EcdsaCurve t={self.t} x={self.x} y={self.y}"
+        return f"EcdsaCurve t={self.t} x={str(self.x)} y={str(self.y)}"
 
 
 class NetworkLocation:
