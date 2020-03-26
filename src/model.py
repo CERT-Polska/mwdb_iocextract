@@ -71,6 +71,29 @@ class RsaKey:
         return f"RsaKey n={self.n} e={self.e}{d_part}"
 
 
+class EcdsaCurve:
+    """ Represents a ECDSA curve used by malware"""
+
+    def __init__(self, t: str, x: int, y: int) -> None:
+        self.t = t
+        self.x = x
+        self.y = y
+
+    def to_misp(self) -> MISPObject:
+        co = MISPObject("crypto-material", standalone=False)
+        co.add_attribute("type", "ECDSA")
+        if self.t == "ecdsa_pub_p384":
+            co.add_attribute("ecdsa-type", "NIST P-384")
+        else:
+            co.add_attribute("ecdsa-type", self.t)
+        co.add_attribute("x", self.x)
+        co.add_attribute("y", self.y)
+        return co
+
+    def prettyprint(self) -> str:
+        return f"EcdsaCurve t={self.t} x={str(self.x)} y={str(self.y)}"
+
+
 class NetworkLocation:
     """ Represents a network location. Can be a domain, ip with a port, etc.
     """
@@ -183,6 +206,7 @@ class IocCollection:
     def __init__(self) -> None:
         """ Creates an empty IocCollection instance """
         self.rsa_keys: List[RsaKey] = []
+        self.ecdsa_curves: List[EcdsaCurve] = []
         self.keys: List[Tuple[str, str]] = []  # (keytype, hexencoded key)
         self.passwords: List[str] = []
         self.network_locations: List[NetworkLocation] = []
@@ -194,6 +218,9 @@ class IocCollection:
 
     def add_rsa_key(self, rsakey: RsaKey) -> None:
         self.rsa_keys.append(rsakey)
+
+    def add_ecdsa_curve(self, ecdsa_curve: EcdsaCurve) -> None:
+        self.ecdsa_curves.append(ecdsa_curve)
 
     def add_key(self, key_type: str, xor_key: str) -> None:
         """ Add a hex encoded other raw key - for example, xor key """
@@ -269,6 +296,8 @@ class IocCollection:
         to_return = []
         for rsa_key in self.rsa_keys:
             to_return.append(rsa_key.to_misp())
+        for ecdsa_curve in self.ecdsa_curves:
+            to_return.append(ecdsa_curve.to_misp())
         if self.keys:
             crypto_obj = MISPObject("crypto-material", standalone=False)
             for k in self.keys:
@@ -296,6 +325,8 @@ class IocCollection:
         result = []
         for rsa_key in self.rsa_keys:
             result.append(rsa_key.prettyprint())
+        for ecdsa_curve in self.ecdsa_curves:
+            result.append(ecdsa_curve.prettyprint())
         for key_type, key_data in self.keys:
             result.append(f"Key {key_type}:{key_data}")
         for password in self.passwords:

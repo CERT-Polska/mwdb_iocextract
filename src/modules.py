@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from .model import LocationType, RsaKey, IocCollection
+from .model import LocationType, RsaKey, EcdsaCurve, IocCollection
 from .errors import ModuleAlreadyRegisteredError
 
 
@@ -247,7 +247,9 @@ def parse_mirai(config: Dict[str, Any]) -> IocCollection:
 @module("trickbot")
 def parse_trickbot(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    # TODO public_key ecdsa_pub_p384
+    if config["public_key"]:
+        ecdsa = config["public_key"]
+        iocs.add_ecdsa_curve(EcdsaCurve(ecdsa["t"], int(ecdsa["x"]), int(ecdsa["y"])))
     for cnc in config.get("urls", []):
         iocs.try_add_network_location(host=cnc["cnc"], port=cnc["port"])
     return iocs
