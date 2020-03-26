@@ -12,12 +12,13 @@ class TestParseRegression(unittest.TestCase):
         current_path = os.path.abspath(os.path.dirname(__file__))
         testdir = current_path + "/testdata/"
 
-        config_files = [f for f in listdir(testdir+"/configs/") if isfile(join(testdir+"/configs/", f))]
+        config_files = [f for f in listdir(testdir+"/configs/")
+                        if isfile(join(testdir+"/configs/", f))]
 
         for config_file in config_files:
-            with open(testdir +"/configs/"+ config_file) as cfg:
-                 config_raw = cfg.read()
-                 config = json.loads(config_raw)
+            with open(testdir + "/configs/" + config_file) as cfg:
+                config_raw = cfg.read()
+                config = json.loads(config_raw)
 
             iocs = parse(config["type"], config)
 
@@ -29,7 +30,8 @@ class TestParseRegression(unittest.TestCase):
             expected_file_txt = splitted_filename[0] + ".txt"
 
             print(splitted_filename[0])
-            self.assertTrue(filecmp.cmp(testdir + result_file_txt, testdir + "/expected/" +
+            self.assertTrue(filecmp.cmp(testdir + result_file_txt,
+                                        testdir + "/expected/" +
                                         expected_file_txt, shallow=True))
 
 

@@ -1,7 +1,7 @@
 import argparse
 import os
 import json
-from mwdblib import Malwarecage
+from mwdblib import Malwarecage  # type: ignore
 from src.api import parse
 
 
@@ -11,7 +11,8 @@ def main():
     )
     parser.add_argument("mwdb_user", help="Mwdb username")
     parser.add_argument("mwdb_pass", help="Mwdb password")
-    parser.add_argument("mwdb_config_id", nargs="?", help="Config Id", default="")
+    parser.add_argument("mwdb_config_id", nargs="?",
+                        help="Config Id", default="")
     args = parser.parse_args()
 
     current_path = os.path.abspath(os.path.dirname(__file__))
@@ -23,7 +24,8 @@ def main():
     if args.mwdb_config_id:
         mwdb_config = mwdb.query_config(args.mwdb_config_id)
 
-        json_file_name = mwdb_config.family + "_" + args.mwdb_config_id + ".json"
+        json_file_name = \
+            mwdb_config.family + "_" + args.mwdb_config_id + ".json"
         generate_config_json_file(testdir, json_file_name, mwdb_config)
 
         txt_file_name = mwdb_config.family + "_" + args.mwdb_config_id + ".txt"
@@ -42,8 +44,8 @@ def main():
                 txt_file_name = cfg.family + "_" + cfg.id + ".txt"
                 try:
                     iocs = parse(cfg.family, cfg.cfg)
-                except:
-                    print("Spoiled: "+cfg.id)
+                except:  # noqa: E722
+                    print("Spoiled: " + cfg.id)
                     continue
 
                 generate_txt_file(testdir, txt_file_name, iocs)
@@ -62,4 +64,3 @@ def generate_txt_file(testdir, txt_file_name, iocs):
 
 if __name__ == "__main__":
     main()
-
