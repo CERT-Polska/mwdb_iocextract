@@ -1,0 +1,4 @@
+Password JSnet_Juju
+NetLoc nasjshome.myqnapcloud.com:2411/
+Mutex JJHu8jZ3jUQZzBkGSg
+Drop JSnet.exe

