@@ -1,0 +1,12 @@
+{
+    "domains": [
+        {
+            "cnc": "call.diminishedvalueutah.com"
+        },
+        {
+            "cnc": "meenwae.top"
+        }
+    ],
+    "exe_type": "loader",
+    "type": "gootkit"
+}

@@ -1,0 +1,99 @@
+{
+    "botnet": 4011,
+    "compilation_date": "Mar 17 2020",
+    "dga_base_url": "constitution.org/usdeclar.txt",
+    "dga_count": 5,
+    "dga_crc": 1320669898,
+    "dga_lsa_seed": 3988359472,
+    "dga_season": 10,
+    "dga_seed": 1,
+    "dga_tld": [
+        ".com",
+        ".ru",
+        ".org"
+    ],
+    "domains": [
+        {
+            "cnc": "settings-win.data.microsoft.com"
+        },
+        {
+            "cnc": "schepsdik.today"
+        },
+        {
+            "cnc": "stkraevoirdslf.today"
+        },
+        {
+            "cnc": "lotlybankied.agency"
+        },
+        {
+            "cnc": "stanetvsemxs.today"
+        },
+        {
+            "cnc": "ssvetleitef.today"
+        },
+        {
+            "cnc": "mozetradugis.today"
+        },
+        {
+            "cnc": "lostellazikdht.today"
+        },
+        {
+            "cnc": "dampometiktd.today"
+        },
+        {
+            "cnc": "cdastroitod.today"
+        },
+        {
+            "cnc": "cmguffiong.today"
+        },
+        {
+            "cnc": "slaungdt.today"
+        },
+        {
+            "cnc": "dstopdaltdsd.agency"
+        },
+        {
+            "cnc": "glmrakobesad.agency"
+        },
+        {
+            "cnc": "tasinhromiidw3.agency"
+        },
+        {
+            "cnc": "ilupitdrope4.agency"
+        },
+        {
+            "cnc": "alfabanjrrd.agency"
+        },
+        {
+            "cnc": "bsberbakh.agency"
+        },
+        {
+            "cnc": "lbusinesd.agency"
+        },
+        {
+            "cnc": "pikazanhsd.agency"
+        },
+        {
+            "cnc": "nlembdasd.agency"
+        },
+        {
+            "cnc": "sstrousihhsd.agency"
+        },
+        {
+            "cnc": "lkakaushkid.agency"
+        },
+        {
+            "cnc": "ymulenrougas.agency"
+        }
+    ],
+    "exe_type": "loader",
+    "key": "78347829JSDUKLHG",
+    "public_key": {
+        "e": 65537,
+        "n": "11752370188818234234367932984885459542854166340237087662006434322123117188694577648403840181786403017994618634701561673771068638661466408611383826900169189"
+    },
+    "server": 12,
+    "timer": 0,
+    "type": "isfb",
+    "version": "2.14.131"
+}

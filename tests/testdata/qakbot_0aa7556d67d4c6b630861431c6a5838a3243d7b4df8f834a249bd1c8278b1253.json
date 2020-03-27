@@ -1,0 +1,12 @@
+{
+    "config": {
+        "in-blob": "c2a9eac477bd1b69495434ba3f3c06d32622889a5f573590c01dd46d347c1263"
+    },
+    "peers": {
+        "in-blob": "5f9ce18be3dc4131d58c69890d18ed99a4a67859e4c8afc10561dfffdb3ef0d8"
+    },
+    "script": {
+        "in-blob": "bf04e191be67b11a69b87d93252ababe4a186a7bc746d110c897bd355d190ffa"
+    },
+    "type": "qakbot"
+}

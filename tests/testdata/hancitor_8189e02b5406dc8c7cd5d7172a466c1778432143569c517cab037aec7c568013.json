@@ -1,0 +1,19 @@
+{
+    "build": "1710_748323",
+    "type": "hancitor",
+    "urls": [
+        {
+            "url": "http://euroteriage.com/4/forum.php"
+        },
+        {
+            "url": "http://gotladyhope.ru/4/forum.php"
+        },
+        {
+            "url": "http://januserfish.ru/4/forum.php"
+        },
+        {
+            "url": ""
+        }
+    ],
+    "user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; Trident/7.0; rv:11.0) like Gecko"
+}

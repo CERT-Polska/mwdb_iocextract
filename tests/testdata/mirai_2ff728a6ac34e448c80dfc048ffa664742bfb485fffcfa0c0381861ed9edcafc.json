@@ -1,0 +1,11 @@
+{
+    "cncs": [
+        {
+            "host": "134.122.126.86",
+            "port": 45
+        }
+    ],
+    "table_key": "0xdedefbaf",
+    "type": "mirai",
+    "variant": "SORA"
+}

@@ -1,0 +1,23 @@
+{
+    "argument_to_downloaded_library": "ekJSQmdeYxA8BXVDf0dgTnJTYARnRWMFYgV6RHdPawRjQmM=",
+    "campaign_id": "8df751",
+    "downloads": [
+        "lib/zs.dll.c",
+        "lib/sql.dll.c",
+        "lib/bs.dll.c"
+    ],
+    "key": "ed9ac595dc050f32592cce3565b8090a",
+    "type": "quantloader",
+    "urls": [
+        {
+            "url": "http://filmsdays.top/q/index.php"
+        },
+        {
+            "url": "http://kinnomanna.top/q/index.php"
+        },
+        {
+            "url": "http://kinofilmone.top/q/index.php"
+        }
+    ],
+    "version": "1.50"
+}

@@ -1,0 +1,4 @@
+Password Ba@Ba
+NetLoc goodattack.duckdns.org:13291/
+Mutex QSR_MUTEX_6f8JWmD7MNuRDe7Euf
+Drop Client.exe

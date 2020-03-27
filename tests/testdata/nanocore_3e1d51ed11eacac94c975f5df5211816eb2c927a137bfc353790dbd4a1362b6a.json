@@ -1,0 +1,21 @@
+{
+    "BypassUAC": "01",
+    "ClearAccessControl": "01",
+    "ClearZoneIdentifier": "01",
+    "ConnectDelay": 4000,
+    "Domain1": "ant69.ddns.net",
+    "Domain2": "127.0.0.1",
+    "EnableDebugMode": "00",
+    "Group": "Default",
+    "Mutex": "9fe33135594b1e4eabfbef6c3d67e0a8",
+    "Port": 1604,
+    "PreventSystemSleep": "01",
+    "PrimaryDNSServer": "8.8.8.8",
+    "RequestElevation": "01",
+    "RestartDelay": 5000,
+    "RunOnStartup": "01",
+    "SetCriticalProcess": "01",
+    "UseCustomDNS": "01",
+    "Version": "1.2.2.0",
+    "type": "nanocore"
+}

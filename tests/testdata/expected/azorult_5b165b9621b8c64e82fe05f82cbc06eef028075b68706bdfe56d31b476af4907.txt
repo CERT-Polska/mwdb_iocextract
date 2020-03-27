@@ -1,1 +1,0 @@
-NetLoc 192.236.146.95//leosa/index.php

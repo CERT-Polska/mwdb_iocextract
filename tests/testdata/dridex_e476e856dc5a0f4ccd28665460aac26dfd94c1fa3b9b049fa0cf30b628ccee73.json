@@ -1,0 +1,14 @@
+{
+    "RC4_key": [
+        "xPRsnE0wyEOyLYoRwZACnFXxRYIZxJ490V6",
+        "urs0OOUodz9460pKdU7X2zqp4qHfZRa56G2Na38U76n9TQlMdXcGLDmOiNA99KbumXJDPsG"
+    ],
+    "botnet": 40300,
+    "c2": [
+        "104.131.41.185:443",
+        "178.62.75.204:1443",
+        "138.201.138.91:3389",
+        "62.75.191.14:3389"
+    ],
+    "type": "dridex"
+}
