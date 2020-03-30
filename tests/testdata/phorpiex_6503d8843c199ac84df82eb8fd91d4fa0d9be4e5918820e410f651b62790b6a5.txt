@@ -1,0 +1,3 @@
+Key other:trk
+NetLoc 220.181.87.80//t.exe
+NetLoc 220.181.87.80:5050

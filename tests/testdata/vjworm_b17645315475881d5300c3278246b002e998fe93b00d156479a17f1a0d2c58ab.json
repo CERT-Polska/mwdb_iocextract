@@ -1,0 +1,9 @@
+{
+    "campaign_name": "CITACION",
+    "type": "vjworm",
+    "urls": [
+        {
+            "url": "http://primerenvio2020.duckdns.org:7974/Vre"
+        }
+    ]
+}

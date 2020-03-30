@@ -1,0 +1,2 @@
+NetLoc amellet.bit//a/
+NetLoc aprode.bit//a/

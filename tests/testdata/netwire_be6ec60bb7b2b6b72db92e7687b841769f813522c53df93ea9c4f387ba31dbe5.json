@@ -1,0 +1,19 @@
+{
+    "dir-path": "%AppData%\\nomn\\",
+    "filename": "HostId-%Rand%",
+    "flags": [
+        64,
+        1,
+        75
+    ],
+    "mutex": false,
+    "password": "Sanctionuk2021",
+    "reg-key": false,
+    "type": "netwire",
+    "urls": [
+        {
+            "cnc": "www.Novmintservices.com",
+            "port": 2121
+        }
+    ]
+}

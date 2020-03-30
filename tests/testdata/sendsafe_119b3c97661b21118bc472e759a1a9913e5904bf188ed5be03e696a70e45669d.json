@@ -1,0 +1,7 @@
+{
+    "cnc": "31.44.184.110",
+    "http_port": "50021",
+    "service_name": "Enterprise Mailing Service",
+    "type": "sendsafe",
+    "udp_port": "50022"
+}
