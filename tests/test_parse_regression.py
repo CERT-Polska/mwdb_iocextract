@@ -1,4 +1,3 @@
-import filecmp
 import unittest
 import json
 from src.api import parse
@@ -19,21 +18,16 @@ class TestParseRegression(unittest.TestCase):
 
             iocs = parse(config["type"], config)
 
-            result_file_txt = "test_result.txt"
-            with open(testdir + result_file_txt, "w") as fp:
-                fp.write(iocs.prettyprint() + "\n")
-
             split_filename = config_file.split(".")
             expected_file_txt = split_filename[0] + ".txt"
 
-            print(split_filename[0])
-            self.assertTrue(
-                filecmp.cmp(
-                    testdir + result_file_txt,
-                    testdir + expected_file_txt,
-                    shallow=True,
-                )
+            expected_data = (
+                open(testdir + expected_file_txt, "rb").read().decode("utf-8")
             )
+
+            print(split_filename[0])
+
+            self.assertEqual(expected_data, iocs.prettyprint() + "\n")
 
 
 if __name__ == "__main__":
