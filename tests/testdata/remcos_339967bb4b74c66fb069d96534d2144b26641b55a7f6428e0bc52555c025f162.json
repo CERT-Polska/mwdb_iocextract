@@ -1,0 +1,12 @@
+{
+    "c2": [
+        {
+            "host": "103.147.184.15:3030",
+            "password": "kehinde#2020"
+        }
+    ],
+    "raw_cfg": {
+        "in-blob": "c187ccdeda82966eab40ed4d8800d9ab8a067d254ea279822f794e1fe9f7e5be"
+    },
+    "type": "remcos"
+}

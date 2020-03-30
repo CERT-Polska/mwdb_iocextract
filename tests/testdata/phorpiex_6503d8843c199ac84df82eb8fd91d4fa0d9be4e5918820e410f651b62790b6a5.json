@@ -1,0 +1,12 @@
+{
+    "cnc_url": "http://220.181.87.80/t.exe",
+    "cncs": [
+        {
+            "host": "220.181.87.80",
+            "port": 5050
+        }
+    ],
+    "directory": "%s\\M-50504502105437043020493029585030",
+    "encryption_key": "trk",
+    "type": "phorpiex"
+}

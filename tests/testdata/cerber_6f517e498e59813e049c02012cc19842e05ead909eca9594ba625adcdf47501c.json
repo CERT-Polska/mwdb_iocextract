@@ -1,0 +1,29 @@
+{
+    "cnc": [
+        {
+            "ip": "91.117.40.0",
+            "mask": "255.255.255.224"
+        },
+        {
+            "ip": "91.119.40.0",
+            "mask": "255.255.255.224"
+        },
+        {
+            "ip": "91.121.40.0",
+            "mask": "255.255.252.0"
+        }
+    ],
+    "default_payment_url": [
+        "p27dokhpz2n7nvgr.onion.cab",
+        "p27dokhpz2n7nvgr.onion.nu",
+        "p27dokhpz2n7nvgr.onion.to",
+        "p27dokhpz2n7nvgr.onion.link",
+        "p27dokhpz2n7nvgr.tor2web.org"
+    ],
+    "global_public_key": "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF2a3R5NXFocUV5ZFI5MDc2RmV2cAowdU1QN0laTm1zMUFBN0dQUVVUaE1XYllpRVlJaEJLY1QwL253WXJCcTBPZ3Y3OUsxdHRhMDRFSFRyWGdjQXAvCk9KZ0JoejlONThhZXdkNHlaQm0yY29lYURHdmNHUkFjOWU3Mk9iRlEvVE1FL0lvN0xaNXFYRFd6RGFmSThMQTgKSlFtU3owTCsvRytMUFRXZzdrUE9wSlQ3V1NrUmI5VDh3NVFnWlJKdXZ2aEVySE04M2tPM0VMVEgrU29FSTUzcAo0RU5Wd2ZOTkVwT3BucE9PU0tRb2J0SXc1NkNzUUZyaGFjMHNRbE9qZWsvbXVWbHV4amlFbWMwZnN6azJXTFNuCnFyeWlNeXphSTVEV0JEallLWEExdHAyaC95Z2JrWWRGWVJiQUVxd3RMeFQyd01mV1BRSTVPa2hUYTl0WnFEMEgKblFJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==",
+    "orig_cfg": {
+        "in-blob": "8f054c52be16c432c619609ab02dd14ec7d8ac24def7aa2fda6e9fb0abba05d1"
+    },
+    "partner_id": 399433,
+    "type": "cerber"
+}

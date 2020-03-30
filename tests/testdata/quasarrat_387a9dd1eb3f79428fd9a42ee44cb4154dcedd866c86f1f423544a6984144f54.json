@@ -1,0 +1,13 @@
+{
+    "encryption_key": "Ba@Ba",
+    "hosts": [
+        "goodattack.duckdns.org:13291"
+    ],
+    "install_name": "Client.exe",
+    "log_directory": "Logs",
+    "mutex": "QSR_MUTEX_6f8JWmD7MNuRDe7Euf",
+    "startup_key": "Quasar Client Startup",
+    "subdirectory": "SubDir",
+    "type": "quasarrat",
+    "version": "1.3.0.0"
+}
