@@ -29,7 +29,7 @@ def main() -> None:
         )
         generate_config_json_file(testdir, json_file_name, mwdb_config)
     else:
-        families_parsed = {""}
+        families_parsed = set()
         for cfg in mwdb.recent_configs():
             if cfg.type != "static":
                 continue
