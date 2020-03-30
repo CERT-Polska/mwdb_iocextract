@@ -21,9 +21,8 @@ class TestParseRegression(unittest.TestCase):
             split_filename = config_file.split(".")
             expected_file_txt = split_filename[0] + ".txt"
 
-            expected_data = (
-                open(testdir + expected_file_txt, "rb").read().decode("utf-8")
-            )
+            with open(testdir + expected_file_txt, "rb") as exp:
+                expected_data = exp.read().decode("utf-8")
 
             print(split_filename[0])
 
