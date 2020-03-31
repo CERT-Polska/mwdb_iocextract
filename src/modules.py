@@ -249,7 +249,9 @@ def parse_trickbot(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     if config["public_key"]:
         ecdsa = config["public_key"]
-        iocs.add_ecdsa_curve(EcdsaCurve(ecdsa["t"], int(ecdsa["x"]), int(ecdsa["y"])))
+        iocs.add_ecdsa_curve(
+            EcdsaCurve(ecdsa["t"], int(ecdsa["x"]), int(ecdsa["y"])),
+        )
     for cnc in config.get("urls", []):
         iocs.try_add_network_location(host=cnc["cnc"], port=cnc["port"])
     return iocs
