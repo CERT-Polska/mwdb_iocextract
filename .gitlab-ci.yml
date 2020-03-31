@@ -14,4 +14,4 @@ test_code:
   image: python:3.6
   script:
     - pip3 install -r src/requirements.txt
-    - python3 -m unittests tests.test_parse_regression
+    - python3 -m unittest tests.test_parse_regression
