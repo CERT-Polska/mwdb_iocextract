@@ -1,3 +1,3 @@
-NetLoc euroteriage.com//4/forum.php
-NetLoc gotladyhope.ru//4/forum.php
-NetLoc januserfish.ru//4/forum.php
+NetLoc http://euroteriage.com/4/forum.php
+NetLoc http://gotladyhope.ru/4/forum.php
+NetLoc http://januserfish.ru/4/forum.php

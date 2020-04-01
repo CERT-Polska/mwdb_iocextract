@@ -1,10 +1,10 @@
-from typing import List, Optional, Tuple
+from typing import List, Tuple, Union
 from Cryptodome.PublicKey import RSA  # type: ignore
 from urllib.parse import urlparse
 from malduck import base64, rsa  # type: ignore
 import re
 from enum import Enum
-from .errors import NotADomainOrIpError, InvalidNetLocError, IocExtractError
+from .errors import IocExtractError
 from pymisp import MISPObject  # type: ignore
 
 
@@ -99,75 +99,44 @@ class NetworkLocation:
     """
 
     def __init__(
-        self,
-        location_type: LocationType = LocationType.CNC,
-        ip: Optional[str] = None,
-        host: Optional[str] = None,
-        port: Optional[int] = None,
-        path: Optional[str] = None,
+        self, url: str, location_type: LocationType = LocationType.CNC
     ) -> None:
-        """ All fields are optional.
-        If specified, `ip` must be a valid ipv4.
-        If `ip` is not specified`, `host` can be either ip or domain name.
-        if `ip` is specified, `host` must be a domain name or None.
-        It's recommended to just specify "host" and let the class decide
-        what it is (the only exception is when you know both ip and domain).
-        """
-        if host is not None and "/" in host:
-            raise NotADomainOrIpError()
-        self.ip = None
-        self.domain = None
-        if ip is None:
-            if host is None:
-                raise InvalidNetLocError("ip or host must be specified")
-            if is_ipv4(host):
-                self.ip = host
-            else:
-                self.domain = host
-        else:
-            if not is_ipv4(ip):
-                raise InvalidNetLocError(f"{ip} is not a valid ipv4 address")
-            self.ip = ip
-            if host is not None:
-                if is_ipv4(host):
-                    raise InvalidNetLocError(
-                        f"when ip is specified, host must be a domain"
-                    )
-                self.domain = host
+        self.url = urlparse(url)
+        if self.url.hostname is None:
+            self.url = urlparse("unknown://" + url)
 
-        self.host = self.domain or self.ip
-        self.port = port
-        self.path = path
         self.location_type = location_type
 
     @property
-    def url(self):
-        port_part = f":{self.port}" if self.port else ""
-        path_part = self.path or ""
-        return self.host + port_part + path_part
+    def ip(self):
+        if self.url.hostname and is_ipv4(self.url.hostname):
+            return self.url.hostname
+        return None
 
-    @classmethod
-    def parse_url(
-        cls, url: str, location_type: LocationType = LocationType.CNC
-    ) -> "NetworkLocation":
-        """ Parse a url (i.e. something like "http://domain.pl:1234/path") """
-        try:
-            urlobj = urlparse(url)
-            if urlobj.hostname is None:
-                # probably a missing schema - retry with a fake one
-                urlobj = urlparse("http://" + url)
-        except ValueError:
-            raise InvalidNetLocError(f"{url} is not a valid url.")
+    @property
+    def domain(self):
+        if self.url.hostname and not is_ipv4(self.url.hostname):
+            return self.url.hostname
+        return None
 
-        return cls(
-            host=urlobj.hostname,
-            port=urlobj.port,
-            path=urlobj.path,
-            location_type=location_type,
-        )
+    @property
+    def port(self):
+        return self.url.port
+
+    @property
+    def path(self):
+        return self.url.path
+
+    @property
+    def pretty_url(self):
+        url = self.url.geturl()
+        if url.startswith("unknown://"):
+            return url[len("unknown://") :]
+        return url
 
     def to_misp(self) -> MISPObject:
         obj = MISPObject("url", standalone=False)
+        obj.add_attribute("url", self.pretty_url)
         if self.ip:
             a = obj.add_attribute("ip", self.ip)
             if a is not None:
@@ -180,24 +149,13 @@ class NetworkLocation:
             obj.add_attribute("port", self.port)
         if self.path:
             obj.add_attribute("resource_path", self.path)
+        if self.url.query:
+            obj.add_attribute("query_string", self.url.query)
         return obj
 
     def prettyprint(self) -> str:
         """ Pretty print for debugging """
-        loc = ""
-        if self.ip is not None:
-            if self.domain is not None:
-                loc = f"[{self.domain}={self.ip}]"
-            else:
-                loc = self.ip
-        else:
-            loc = str(self.domain)
-        if self.port is not None:
-            loc += ":" + str(self.port)
-        if self.path is not None:
-            loc += "/" + self.path
-
-        return f"NetLoc " + loc
+        return f"NetLoc " + self.pretty_url
 
 
 class IocCollection:
@@ -242,33 +200,26 @@ class IocCollection:
     def add_network_location(self, netloc: NetworkLocation) -> None:
         self.network_locations.append(netloc)
 
-    def try_add_network_location(
-        self,
-        location_type: LocationType = LocationType.CNC,
-        ip: Optional[str] = None,
-        host: Optional[str] = None,
-        port: Optional[int] = None,
-        path: Optional[str] = None,
+    def add_host_port(
+        self, host: str, port: Union[str, int], schema: str = "unknown"
     ) -> None:
+        if isinstance(port, str):
+            port_val = int(port)
+        else:
+            port_val = port
         try:
-            self.add_network_location(
-                NetworkLocation(
-                    location_type=location_type,
-                    ip=ip,
-                    host=host,
-                    port=port,
-                    path=path,
-                )
-            )
+            self.try_add_url(f"{schema}://{host}:{port_val}")
         except IocExtractError:
             pass
 
     def try_add_url(
         self, url: str, location_type: LocationType = LocationType.CNC
     ) -> None:
+        if not url.strip():
+            return
         try:
             self.network_locations.append(
-                NetworkLocation.parse_url(url, location_type=location_type)
+                NetworkLocation(url, location_type=location_type)
             )
         except IocExtractError:
             pass
@@ -317,7 +268,11 @@ class IocCollection:
         for netloc in self.network_locations:
             to_return.append(netloc.to_misp())
         # TODO self.dropped_filenames
-        # TODO self.emails
+        for email in self.emails:
+            obj = MISPObject("email", standalone=False)
+            obj.add_attribute("to", email)
+            to_return.append(obj)
+
         return to_return
 
     def prettyprint(self) -> str:
@@ -356,6 +311,6 @@ class IocCollection:
                 self.dropped_filenames,
                 self.emails,
                 self.ransom_messages,
-                self.campaign_ids
+                self.campaign_ids,
             ]
         )

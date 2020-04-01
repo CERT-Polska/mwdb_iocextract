@@ -1,4 +1,4 @@
-NetLoc casadepartida.best/
-NetLoc gobuynewone.best/
-NetLoc cubabucas.xyz/
-NetLoc cubefresno.best/
+NetLoc casadepartida.best
+NetLoc gobuynewone.best
+NetLoc cubabucas.xyz
+NetLoc cubefresno.best

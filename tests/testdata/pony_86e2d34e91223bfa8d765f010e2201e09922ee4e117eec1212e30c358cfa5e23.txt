@@ -1,1 +1,1 @@
-NetLoc southsidenetball.co.za//onny/Panel/gate.php
+NetLoc http://southsidenetball.co.za/onny/Panel/gate.php

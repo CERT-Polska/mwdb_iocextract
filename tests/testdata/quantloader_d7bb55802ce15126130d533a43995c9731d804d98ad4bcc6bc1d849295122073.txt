@@ -1,4 +1,4 @@
 Key other:ed9ac595dc050f32592cce3565b8090a
-NetLoc filmsdays.top//q/index.php
-NetLoc kinnomanna.top//q/index.php
-NetLoc kinofilmone.top//q/index.php
+NetLoc http://filmsdays.top/q/index.php
+NetLoc http://kinnomanna.top/q/index.php
+NetLoc http://kinofilmone.top/q/index.php

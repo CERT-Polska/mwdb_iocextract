@@ -1,5 +1,5 @@
-NetLoc freecaps19.top//195181/logs/fre.php
-NetLoc kbfvzoboss.bid//alien/fre.php
-NetLoc alphastand.trade//alien/fre.php
-NetLoc alphastand.win//alien/fre.php
-NetLoc alphastand.top//alien/fre.php
+NetLoc http://freecaps19.top/195181/logs/fre.php
+NetLoc kbfvzoboss.bid/alien/fre.php
+NetLoc alphastand.trade/alien/fre.php
+NetLoc alphastand.win/alien/fre.php
+NetLoc alphastand.top/alien/fre.php
