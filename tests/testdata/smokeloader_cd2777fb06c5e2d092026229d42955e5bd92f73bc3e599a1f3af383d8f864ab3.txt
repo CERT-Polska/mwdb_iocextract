@@ -1,2 +1,2 @@
-NetLoc 185.35.137.147//mlp/
-NetLoc dill10n1.xyz//c1/
+NetLoc http://185.35.137.147/mlp/
+NetLoc http://dill10n1.xyz/c1/

@@ -1,1 +1,1 @@
-NetLoc logroom.top//anyisouth/index.php
+NetLoc http://logroom.top/anyisouth/index.php

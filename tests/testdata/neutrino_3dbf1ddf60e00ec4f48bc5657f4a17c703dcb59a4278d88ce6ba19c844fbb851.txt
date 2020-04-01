@@ -1,1 +1,1 @@
-NetLoc www.h141398.s24.test-hf.su//blog/tasks.php
+NetLoc http://www.h141398.s24.test-hf.su/blog/tasks.php

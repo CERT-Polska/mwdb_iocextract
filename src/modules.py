@@ -22,7 +22,7 @@ def parse_emotet(config: Dict[str, Any]) -> IocCollection:
     if "public_key" in config:
         iocs.try_add_rsa_from_pem(config["public_key"])
     for url in config.get("urls", []):
-        iocs.try_add_network_location(host=url["cnc"], port=url["port"])
+        iocs.add_host_port(url["cnc"], url["port"])
     return iocs
 
 
@@ -30,7 +30,7 @@ def parse_emotet(config: Dict[str, Any]) -> IocCollection:
 def parse_emotet_spam(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for url in config.get("urls", []):
-        iocs.try_add_network_location(host=url["cnc"], port=url["port"])
+        iocs.add_host_port(url["cnc"], url["port"])
     return iocs
 
 
@@ -46,7 +46,7 @@ def parse_emotet_doc(config: Dict[str, Any]) -> IocCollection:
 def parse_netwire(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for url in config.get("urls", []):
-        iocs.try_add_network_location(host=url["cnc"], port=url["port"])
+        iocs.add_host_port(url["cnc"], url["port"])
     if "password" in config:
         iocs.add_password(config["password"])
     if "mutex" in config:
@@ -58,7 +58,7 @@ def parse_netwire(config: Dict[str, Any]) -> IocCollection:
 def parse_avemaria(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for url in config.get("c2", []):
-        iocs.try_add_network_location(host=url["host"])
+        iocs.try_add_url(url["host"])
     if "drop_name" in config:
         iocs.add_drop_filename(config["drop_name"])
     return iocs
@@ -69,7 +69,7 @@ def parse_remcos(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for url in config.get("c2", []):
         ip, portstr = url["host"].split(":")
-        iocs.try_add_network_location(host=ip, port=int(portstr))
+        iocs.add_host_port(ip, int(portstr))
     return iocs
 
 
@@ -93,10 +93,7 @@ def parse_ostap(config: Dict[str, Any]) -> IocCollection:
 def parse_wshrat(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for url in config.get("c2", []):
-        if url.count(":") != 1:
-            continue
-        ip, portstr = url.split(":")
-        iocs.try_add_network_location(ip=ip, port=int(portstr))
+        iocs.try_add_url(url)
     return iocs
 
 
@@ -199,7 +196,7 @@ def isfb(config: Dict[str, Any]) -> IocCollection:
 
     for domain in config.get("domains", []):
         # TODO: what about fake domains here?
-        iocs.try_add_network_location(host=domain["cnc"])
+        iocs.try_add_url(domain["cnc"])
 
     for url in config.get("urls", []):
         iocs.try_add_url(url["url"])
@@ -213,7 +210,7 @@ def danabot(config: Dict[str, Any]) -> IocCollection:
         iocs.try_add_rsa_from_base64(config["rsa_key"])
 
     for netloc in config.get("urls", []):
-        iocs.try_add_network_location(host=netloc)
+        iocs.try_add_url(netloc)
     return iocs
 
 
@@ -240,7 +237,7 @@ def parse_mirai(config: Dict[str, Any]) -> IocCollection:
     for cnc in config.get("cncs", []):
         if "host" not in cnc:
             continue
-        iocs.try_add_network_location(host=cnc["host"], port=cnc.get("port"))
+        iocs.add_host_port(cnc["host"], cnc.get("port"))
     return iocs
 
 
@@ -253,7 +250,7 @@ def parse_trickbot(config: Dict[str, Any]) -> IocCollection:
             EcdsaCurve(ecdsa["t"], int(ecdsa["x"]), int(ecdsa["y"])),
         )
     for cnc in config.get("urls", []):
-        iocs.try_add_network_location(host=cnc["cnc"], port=cnc["port"])
+        iocs.add_host_port(cnc["cnc"], cnc["port"])
     return iocs
 
 
@@ -261,7 +258,7 @@ def parse_trickbot(config: Dict[str, Any]) -> IocCollection:
 def parse_emotetupnp(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for cnc in config.get("urls", []):
-        iocs.try_add_network_location(host=cnc["cnc"], port=cnc["port"])
+        iocs.add_host_port(cnc["cnc"], cnc["port"])
     return iocs
 
 
@@ -277,7 +274,7 @@ def parse_smokeloader(config: Dict[str, Any]) -> IocCollection:
 def parse_njrat(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for cnc in config.get("c2", []):
-        iocs.try_add_network_location(host=cnc)
+        iocs.try_add_url(cnc)
     if "drop_name" in config:
         iocs.add_drop_filename(config["drop_name"])
     return iocs
@@ -388,7 +385,7 @@ def parse_kins(config: Dict[str, Any]) -> IocCollection:
 def parse_tofsee(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for cnc in config.get("urls", []):
-        iocs.try_add_network_location(host=cnc["ip"], port=cnc["port"])
+        iocs.add_host_port(cnc["ip"], cnc["port"])
     return iocs
 
 
@@ -398,7 +395,7 @@ def parse_elknot(config: Dict[str, Any]) -> IocCollection:
     for cnc in config.get("cncs", []):
         if "host" not in cnc:
             continue
-        iocs.try_add_network_location(host=cnc["host"], port=cnc.get("port"))
+        iocs.add_host_port(cnc["host"], cnc.get("port"))
     return iocs
 
 
@@ -430,7 +427,7 @@ def parse_phorpiex(config: Dict[str, Any]) -> IocCollection:
     if "cnc_url" in config:
         iocs.try_add_url(config["cnc_url"])
     for cnc in config.get("cncs", []):
-        iocs.try_add_network_location(host=cnc["host"], port=cnc.get("port"))
+        iocs.add_host_port(cnc["host"], cnc.get("port"))
     if "encryption_key" in config:
         iocs.add_key("other", config["encryption_key"])
     return iocs
@@ -491,6 +488,7 @@ def parse_nymaim(config: Dict[str, Any]) -> IocCollection:
         key = config["public_key"]
         iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
     for url in config["urls"]:
+        url = url.replace("]", "")  # some mistakes cannot be unmade
         iocs.try_add_url(url)
     return iocs
 
@@ -551,8 +549,7 @@ def parse_vmzeus(config: Dict[str, Any]) -> IocCollection:
 def parse_sendsafe(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     if "cnc" in config and "http_port" in config:
-        iocs.try_add_network_location(host=config["cnc"],
-                                      port=int(config["http_port"]))
+        iocs.add_host_port(config["cnc"], int(config["http_port"]))
     return iocs
 
 
@@ -624,7 +621,7 @@ def parse_kovter(config: Dict[str, Any]) -> IocCollection:
         key = config["public_key"]
         iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
     for url in config.get("urls", []):
-        iocs.try_add_network_location(host=url["cnc"], port=int(url["port"]))
+        iocs.add_host_port(url["cnc"], int(url["port"]))
     if "rc4key" in config:
         iocs.add_key("rc4", config["rc4key"])
     return iocs

@@ -1,5 +1,5 @@
-NetLoc 23.95.132.48//~main/.isuoxiso/w.php/4X0DZyvYsANUg
-NetLoc kbfvzoboss.bid//alien/fre.php
-NetLoc alphastand.trade//alien/fre.php
-NetLoc alphastand.win//alien/fre.php
-NetLoc alphastand.top//alien/fre.php
+NetLoc http://23.95.132.48/~main/.isuoxiso/w.php/4X0DZyvYsANUg
+NetLoc kbfvzoboss.bid/alien/fre.php
+NetLoc alphastand.trade/alien/fre.php
+NetLoc alphastand.win/alien/fre.php
+NetLoc alphastand.top/alien/fre.php

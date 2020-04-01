@@ -1,4 +1,4 @@
-NetLoc lolupdate4.top//gate1.php
-NetLoc legion17.top//legion17/welcome
-NetLoc lolupdate4.top//test/eu/1.exe
-NetLoc lolupdate4.top//test/eu/2.exe
+NetLoc http://lolupdate4.top/gate1.php?a={bbed3e55656ghf02-0b41-11e3-8249}id=2
+NetLoc http://legion17.top/legion17/welcome
+NetLoc http://lolupdate4.top/test/eu/1.exe
+NetLoc http://lolupdate4.top/test/eu/2.exe

@@ -1,2 +1,2 @@
-NetLoc amellet.bit//a/
-NetLoc aprode.bit//a/
+NetLoc http://amellet.bit/a/
+NetLoc http://aprode.bit/a/
