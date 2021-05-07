@@ -25,7 +25,6 @@ def safe_get_list(config: Dict[str, Any], key: str) -> List[Any]:
     return elem
 
 
-
 def add_url(iocs, config, key):
     for domain in safe_get_list(config, key):
         if isinstance(domain, str):
