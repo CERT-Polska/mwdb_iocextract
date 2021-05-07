@@ -1,6 +1,6 @@
 from typing import Dict, Any, List
 from .model import LocationType, RsaKey, EcdsaCurve, IocCollection
-from .errors import IocExtractError, ModuleAlreadyRegisteredError
+from .errors import ModuleAlreadyRegisteredError
 
 
 modules: Dict[str, Any] = {}
