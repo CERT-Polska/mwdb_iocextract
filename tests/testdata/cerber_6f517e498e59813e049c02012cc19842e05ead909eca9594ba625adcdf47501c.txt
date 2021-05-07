@@ -4,3 +4,6 @@ NetLoc p27dokhpz2n7nvgr.onion.nu
 NetLoc p27dokhpz2n7nvgr.onion.to
 NetLoc p27dokhpz2n7nvgr.onion.link
 NetLoc p27dokhpz2n7nvgr.tor2web.org
+NetLoc 91.117.40.0
+NetLoc 91.119.40.0
+NetLoc 91.121.40.0

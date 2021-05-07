@@ -16,17 +16,23 @@ class TestParseRegression(unittest.TestCase):
                 config_raw = cfg.read()
                 config = json.loads(config_raw)
 
+            split_filename = config_file.split(".")
+            print(split_filename[0])
+
             iocs = parse(config["type"], config)
 
-            split_filename = config_file.split(".")
             expected_file_txt = split_filename[0] + ".txt"
 
             with open(testdir + expected_file_txt, "rb") as exp:
                 expected_data = exp.read().decode("utf-8")
 
-            print(split_filename[0])
 
-            self.assertEqual(expected_data, iocs.prettyprint() + "\n")
+            if expected_data != iocs.prettyprint() + "\n":
+                print("EXPECTED")
+                print(expected_data)
+                print("GOT")
+                print(iocs.prettyprint())
+                self.assertTrue(False)
 
 
 if __name__ == "__main__":

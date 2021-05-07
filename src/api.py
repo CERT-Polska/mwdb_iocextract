@@ -1,11 +1,13 @@
-from .modules import modules
+from . import modules
 from .model import IocCollection
 from typing import Dict, Any
-from .errors import FamilyNotSupportedYetError
 
 
 def parse(family: str, config: Dict[str, Any]) -> IocCollection:
-    if family not in modules:
-        raise FamilyNotSupportedYetError(family)
+    iocs = IocCollection()
+    if family in modules.modules:
+        iocs = modules.modules[family](config)
 
-    return modules[family](config)
+    modules.parse(config, iocs)
+
+    return iocs
