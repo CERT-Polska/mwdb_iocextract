@@ -40,7 +40,7 @@ def add_url(iocs, config, key):
             else:
                 raise NotImplementedError("Unexpected key in the domain")
         else:
-            raise NotImplementedError("WTH is that thing")
+            raise NotImplementedError("The domain has to be either a string or a list")
 
 
 def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
