@@ -729,8 +729,6 @@ def parse_gandcrab(config: Dict[str, Any]) -> IocCollection:
     return iocs
 
 
-# contrib modules
-
 @module("alien")
 def parse_alien(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
@@ -739,6 +737,8 @@ def parse_alien(config: Dict[str, Any]) -> IocCollection:
     add_key(iocs, config, "Key", "unknown")
     return iocs
 
+
+# contrib modules
 
 @module("asyncrat")
 def parse_asyncrat(config: Dict[str, Any]) -> IocCollection:
