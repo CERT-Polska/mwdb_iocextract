@@ -136,6 +136,7 @@ def parse_netwire(config: Dict[str, Any]) -> IocCollection:
         del config["mutex"]
     return IocCollection()
 
+
 @module("quasarrat")
 def parse_quasarrat(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
@@ -297,7 +298,6 @@ def parse_kbot(config: Dict[str, Any]) -> IocCollection:
         iocs.add_campaign_id(config["botcommunity"])
     return iocs
 
-# contrib modules
 
 @module("alien")
 def parse_alien(config: Dict[str, Any]) -> IocCollection:
