@@ -155,7 +155,7 @@ class NetworkLocation:
 
     def prettyprint(self) -> str:
         """ Pretty print for debugging """
-        return f"NetLoc " + self.pretty_url
+        return "NetLoc " + self.pretty_url
 
 
 class IocCollection:

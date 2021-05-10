@@ -1,10 +1,12 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 from .model import LocationType, RsaKey, EcdsaCurve, IocCollection
 from .errors import ModuleAlreadyRegisteredError
 
 
 modules: Dict[str, Any] = {}
 
+
+# Utils
 
 def module(name):
     def decorator(func):
@@ -16,13 +18,60 @@ def module(name):
     return decorator
 
 
+def safe_get_list(config: Dict[str, Any], key: str) -> List[Any]:
+    elem = config.get(key, [])
+    if not isinstance(elem, list):
+        return [elem]
+    return elem
+
+
+def add_url(iocs: IocCollection, config: Dict[str, Any], key: str) -> None:
+    for domain in safe_get_list(config, key):
+        if isinstance(domain, str):
+            iocs.try_add_url(domain)
+        elif isinstance(domain, dict):
+            for hostkey in ["cnc", "url", "ip", "domain", "host"]:
+                if hostkey in domain:
+                    if "port" in domain:
+                        iocs.add_host_port(domain[hostkey], domain["port"])
+                    else:
+                        iocs.try_add_url(domain[hostkey])
+                    break
+            else:
+                raise NotImplementedError("Can't find a host for the domain")
+        else:
+            raise NotImplementedError("The domain has to be either a string or a list")
+
+
+def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
+    for enckey in safe_get_list(config, key):
+        if isinstance(enckey, dict):
+            iocs.add_rsa_key(RsaKey(int(enckey["n"]), int(enckey["e"])))
+        else:
+            if "BEGIN PUBLIC" in enckey:
+                iocs.try_add_rsa_from_pem(enckey)
+            else:
+                raise NotImplementedError("Unknown key type")
+
+
+def add_key(iocs: IocCollection, config: Dict, key: str, keytype: str) -> None:
+    for enckey in safe_get_list(config, key):
+        iocs.add_key(keytype, enckey)
+
+
+def add_mutex(iocs: IocCollection, config: Dict, key: str) -> None:
+    for mutex in safe_get_list(config, key):
+        iocs.add_mutex(mutex)
+
+
+# CERT.PL modules
+
 @module("emotet")
 def parse_emotet(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    if "public_key" in config:
-        iocs.try_add_rsa_from_pem(config["public_key"])
-    for url in config.get("urls", []):
-        iocs.add_host_port(url["cnc"], url["port"])
+    add_rsa_key(iocs, config, "public_key")
+    add_rsa_key(iocs, config, "rsa_pub")  # contrib
+    add_url(iocs, config, "urls")
     return iocs
 
 
@@ -209,8 +258,9 @@ def danabot(config: Dict[str, Any]) -> IocCollection:
     if "rsa_key" in config:
         iocs.try_add_rsa_from_base64(config["rsa_key"])
 
-    for netloc in config.get("urls", []):
-        iocs.try_add_url(netloc)
+    add_url(iocs, config, "urls")
+    add_url(iocs, config, "ips")
+
     return iocs
 
 
@@ -315,8 +365,7 @@ def parse_kpot(config: Dict[str, Any]) -> IocCollection:
 @module("icedid")
 def parse_icedid(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    for domain in config.get("domains", []):
-        iocs.try_add_url(domain["cnc"])
+    add_url(iocs, config, "domains")
     return iocs
 
 
@@ -482,12 +531,9 @@ def parse_vjworm(config: Dict[str, Any]) -> IocCollection:
 @module("nymaim")
 def parse_nymaim(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    if "encryption_key" in config:
-        iocs.add_key("other", config["encryption_key"])
-    if "public_key" in config:
-        key = config["public_key"]
-        iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
-    for url in config["urls"]:
+    add_key(iocs, config, "encryption_key", "other")
+    add_rsa_key(iocs, config, "public_key")
+    for url in config.get("urls", []):
         url = url.replace("]", "")  # some mistakes cannot be unmade
         iocs.try_add_url(url)
     return iocs
@@ -680,4 +726,86 @@ def parse_gandcrab(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     for domain in config.get("domains", []):
         iocs.try_add_url(domain["cnc"])
+    return iocs
+
+
+@module("alien")
+def parse_alien(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    add_url(iocs, config, "C2")
+    add_url(iocs, config, "C2 alt")
+    add_key(iocs, config, "Key", "unknown")
+    return iocs
+
+
+# contrib modules
+
+@module("asyncrat")
+def parse_asyncrat(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    add_mutex(iocs, config, "MTX")
+    add_url(iocs, config, "urls")
+    add_key(iocs, config, "Key", "unknown")
+    return iocs
+
+
+@module("warzone")
+def parse_warzone(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    add_url(iocs, config, "ips")
+    add_url(iocs, config, "urls")
+    return iocs
+
+
+@module("qbot")
+def parse_qbot(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    add_url(iocs, config, "urls")
+    return iocs
+
+
+@module("anubis")
+def parse_anubis(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    add_url(iocs, config, "url")
+    return iocs
+
+
+@module("gozi")
+def parse_gozi(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    add_url(iocs, config, "domains")
+    add_key(iocs, config, "serpent_key", "serpent")
+    return iocs
+
+
+@module("redlinestealer")
+def parse_redlinestealer(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    add_url(iocs, config, "cncs")
+    return iocs
+
+
+@module("xloader")
+def parse_xloader(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    add_url(iocs, config, "domains")
+    add_url(iocs, config, "urls")
+    add_key(iocs, config, "keys", "unknown")
+    return iocs
+
+
+@module("bunitu")
+def parse_bunitu(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    add_key(iocs, config, "xorkey", "xor")
+    return iocs
+
+
+@module("revengerat")
+def parse_revengerat(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    add_url(iocs, config, "cncs")
+    add_mutex(iocs, config, "mutex")
+    add_key(iocs, config, "key", "unknown")
     return iocs
