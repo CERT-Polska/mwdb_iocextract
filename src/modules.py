@@ -1,4 +1,4 @@
-from typing import Dict, Any, List, Union
+from typing import Dict, Any, List
 from .model import LocationType, RsaKey, EcdsaCurve, IocCollection
 from .errors import ModuleAlreadyRegisteredError
 
