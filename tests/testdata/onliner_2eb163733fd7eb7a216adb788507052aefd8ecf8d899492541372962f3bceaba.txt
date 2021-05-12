@@ -1,1 +1,6 @@
-
+NetLoc http://94.102.60.132/good/index.php
+NetLoc http://94.102.60.132/good/index.php
+NetLoc http://94.102.60.132/good/index.php
+NetLoc http://94.102.60.132/good/index.php
+NetLoc http://94.102.60.132/good/index.php
+NetLoc http://94.102.60.132/good/index.php

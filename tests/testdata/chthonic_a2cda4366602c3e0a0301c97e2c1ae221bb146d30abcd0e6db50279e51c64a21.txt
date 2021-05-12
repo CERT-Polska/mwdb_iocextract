@@ -1,2 +1,3 @@
+Key aes:de27ca69a5070f2d9a83ca1933285c76
 NetLoc http://amellet.bit/a/
 NetLoc http://aprode.bit/a/

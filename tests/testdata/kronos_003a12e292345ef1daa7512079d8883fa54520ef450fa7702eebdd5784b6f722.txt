@@ -1,2 +1,2 @@
-NetLoc jevuknz34ronf3pl.onion
 NetLoc http://jevuknz34ronf3pl.onion/kpanel/connect.php
+NetLoc jevuknz34ronf3pl.onion
