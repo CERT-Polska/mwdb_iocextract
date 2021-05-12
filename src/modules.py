@@ -34,22 +34,22 @@ def safe_get_list(config: Dict[str, Any], key: str) -> List[Any]:
     return result
 
 
-def add_url(iocs, config, key):
+def add_url(iocs: IocCollection, config: Dict[str, Any], key: str) -> None:
     for domain in safe_get_list(config, key):
         if isinstance(domain, str):
             iocs.try_add_url(domain)
         elif isinstance(domain, dict):
-            for key in ["cnc", "url", "ip", "domain", "host"]:
-                if key in domain:
+            for hostkey in ["cnc", "url", "ip", "domain", "host"]:
+                if hostkey in domain:
                     if "port" in domain:
-                        iocs.add_host_port(domain[key], domain["port"])
+                        iocs.add_host_port(domain[hostkey], domain["port"])
                     else:
-                        iocs.try_add_url(domain[key])
+                        iocs.try_add_url(domain[hostkey])
                     break
             else:
-                raise NotImplementedError("Unexpected key in the domain")
+                raise NotImplementedError("Can't find a host for the domain")
         else:
-            raise NotImplementedError("WTH is that thing")
+            raise NotImplementedError("The domain has to be either a string or a list")
 
 
 def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
