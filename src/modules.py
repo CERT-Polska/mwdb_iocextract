@@ -69,7 +69,7 @@ def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
             if "BEGIN PUBLIC" in enckey:
                 iocs.try_add_rsa_from_pem(enckey)
                 continue
-        raise NotImplementedError("Unknown key type")
+        raise NotImplementedError("Unknown RSA key type")
 
 
 def add_key(iocs: IocCollection, config: Dict, key: str, keytype: str) -> None:
