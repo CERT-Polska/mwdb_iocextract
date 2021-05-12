@@ -4,13 +4,15 @@ Python 3 library useful for getting structured IOC data from [mwdb](https://mwdb
 
 ## Why?
 
-_Warning: this project is only relevant to [mwdb](https://mwdb.cert.pl) users. Mwdb is our solution for storing and extracting malware. If you're a white-hat security researcher interested in getting access to it, send a request via our website or email `info@cert.pl`._
+_Warning: this project is only relevant to [mwdb](https://mwdb.cert.pl) and [malduck](https://malduck.readthedocs.io) users._
 
-Mwdb configs are pretty unstructured (they're basically JSONs with some additional metadata). On the other hand, automated processing often requires structured data.
+Malduck configs (like the ones in mwdb) are usually unstructured (they're just JSONs with some additional metadata).
+On the other hand, automated processing often requires structured data.
 
-For example, extracting and processing URLs is a common use case for analysts. Sadly, every module stores them a bit differently (and due to backward compatibility we're not ready to change that).
+For example, URL processing and extraction is a common use case for analysts. Sadly, every module stores them a bit
+differently (and due to backward compatibility we're not ready to change that).
 
-For example, compare how ISFB module reports its URls:
+For example, compare how we store URLs from ISFB:
 
 ```json
 "domains": [
@@ -79,29 +81,134 @@ NetLoc 107.160.244.5:1024
 
 See below for more usage examples.
 
-## Info
-
-**Contact email**: msm@cert.pl or info@cert.pl
-
 ## Install
 
 ```bash
 $ pip install mwdb-iocextract
 ```
 
-You can always find the newest version here:
+You can find the newest version here:
 
 https://pypi.org/project/mwdb-iocextract/
+
+## How does it work
+
+Most configs can be parsed without any change to this library. Standard keys,
+like "urls", are automatically recognised and parsed correctly.
+
+Plurality of the key name does not matter. When value is a list, all elements are added separately.
+For example both of these are equivalent:
+
+```json
+{
+    "urls": "127.0.0.1"
+}
+```
+```json
+{
+    "url": ["127.0.0.1"]
+}
+```
+
+
+Right now this library supports:
+
+#### Network Locations
+
+"Network Locations" can be IP, domain, URL, etc. There are many available formats:
+
+```python
+    "hosts": [
+        "127.0.0.1",  # format 1 - IP
+        "http://malware.com",  # format 2 - URL
+        { "cnc": "http://malware.com:1337" },  # format 3 - URL in a dict.
+        # Allowed keys: "cnc", "url", "ip", "domain", "host" (all handled in the same way)
+        { "cnc": "malware.com", "port": 1337 },  # format 4 - domain/port pair
+
+        # NOT allowed: url + port
+        # { "cnc": "http://malware.com:1337", "port": 1337 },
+```
+
+Config keys: `urls`, `c2`, `ips`, `domains`, `url`, `cnc`, `cncs`, `hosts`, `host`, `cncurl`.
+
+#### Passwords
+
+Passwords hardcoded in malware. Plain text.
+
+Config keys: `password`.
+
+#### Mutexes
+
+Config keys: `mtx`, `mutex`. Plain text.
+
+#### Emails
+
+Emails used by malware and hardcoded in the source. Plain text.
+
+Config keys: `email`, `emails`.
+
+#### Ransom messages
+
+HTML or txt ransom messages hardcoded in the source. Plain text.
+
+Config keys: `ransommessage`.
+
+#### RSA keys
+
+RSA public or private keys hardcoded in the binary.
+
+There are two supported formats:
+ - plaintext (`"-----BEGIN PUBLIC KEY-----..."`)
+ - parsed - a dict with "n", "e", and (optionall) "d" keys.
+
+Parsed format is more deterministic and recommended for your modules, but you can use both.
+
+Config keys: `publickey`, `rsapub`, `rsakey`, `pubkey`, `privkey`.
+
+#### AES keys
+
+AES keys hardcoded in the binary. Plaintext.
+
+Config keys: `aeskey`.
+
+#### XOR keys
+
+XOR keys hardcoded in the binary. Plaintext.
+
+Config keys: `xorkey`.
+
+#### Serpent keys
+
+XOR keys hardcoded in the binary. Plaintext.
+
+Config keys: `serpentkey`.
+
+#### Encryption keys
+
+Other key types found in the malware. Extracted as a key of type "unknown". Plaintext.
+
+Config keys: `encryptionkey`, `key`, `keys`.
+
+#### Dropped files
+
+Paths or filenames of files dropped by the malware. Plaintext.
+
+Config keys: `drop_name`.
+
+
+## Contributing
+
+If you want to extend this library or add support for more modules, feel free to
+contribute to this repository. We're only interested in modules at least
+partially publicly accessible. So [mwcfg.info](http://mwcfg.info/) module
+support is OK to merge, but your in-house internal TLP:RED modules - probably
+no.
 
 ## Usage
 
 ### Scan mwdb
 
-In a typical use case, you'll probably want to get and parse configs
-downloaded directly from mwdb. To access the mwdb api and download
-recent configs we utilise the
-[mwdblib](https://github.com/CERT-Polska/mwdblib) (our official API
-bindings for [mwdb](mwdb.cert.pl)]).
+How to download config from mwdb and parse it:
 
 ```python
 from mwdb_iocextract import parse
@@ -115,17 +222,10 @@ def main():
 
     for cfg in mwdb.recent_configs():
         if cfg.type != "static":
-            # Not all configs are created equal.
-            # This code only deals with "static" configs, i.e. configs
+            # This library only works with "static" configs, i.e. configs
             # extracted from malware/memory dumps
             continue
-        try:
-            iocs = parse(cfg.family, cfg.cfg)
-        except FamilyNotSupportedYetError:
-            # This means, that your mwdb_iocextract version does not
-            # support this family. Consider updating it (it may take
-            # us a few days to add support for a new family)
-            continue
+        iocs = parse(cfg.family, cfg.cfg)
         print(iocs.prettyprint())  # convert all IoCs to string
 
 
@@ -170,10 +270,7 @@ You can convert `IocCollection` to a MISP object:
 
 ```python
 def upload_to_misp(family, config):
-    try:
-        iocs = parse(family, config)
-    except FamilyNotSupportedYetError:
-        return
+    iocs = parse(family, config)
 
     if not iocs:
         # Nothing actionable found - skip the config
@@ -191,5 +288,3 @@ def upload_to_misp(family, config):
     misp = ExpandedPyMISP(MISP_URL, MISP_KEY, MISP_VERIFYCERT)
     misp.add_event(event)
 ```
-
-_Alternatively, depending on who you represent, you can reach out to us and we can discuss sharing our MISP with you._

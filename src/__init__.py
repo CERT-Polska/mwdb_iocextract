@@ -6,7 +6,7 @@ __all__ = [
     "parse",
     "IocCollection",
     "IocExtractError",
-    "FamilyNotSupportedYetError",
+    "FamilyNotSupportedYetError",  # deprecated, exported for compatibility
     "RsaKey",
     "LocationType",
     "NetworkLocation",

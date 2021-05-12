@@ -1,18 +1,13 @@
 class IocExtractError(RuntimeError):
+    """Base class for all IOC extract errors."""
     pass
 
 
 class FamilyNotSupportedYetError(IocExtractError):
-    pass
-
-
-class NotADomainOrIpError(IocExtractError):
+    """Deprecated and never thrown. Do not use."""
     pass
 
 
 class ModuleAlreadyRegisteredError(IocExtractError):
-    pass
-
-
-class InvalidNetLocError(IocExtractError):
+    """Serious internal error, the sam emodule registered twice"""
     pass
