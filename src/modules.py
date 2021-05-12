@@ -257,6 +257,26 @@ def parse_necurs(config: Dict[str, Any]) -> IocCollection:
     return iocs
 
 
+@module("isfb")
+def parse_isfb(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    if "key" in config:
+        # "key" key is a serpent key
+        iocs.add_key("serpent", "key")
+        del config["key"]
+    return iocs
+
+
+@module("guloader")
+def parse_guloader(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+    if "key" in config:
+        # "key" key is a xor key
+        iocs.add_key("xor", "key")
+        del config["key"]
+    return iocs
+
+
 @module("pushdo")
 def parse_pushdo(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
