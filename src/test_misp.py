@@ -1,7 +1,6 @@
 import argparse
 import logging
 from pymisp import MISPEvent, PyMISP  # type: ignore
-from .errors import FamilyNotSupportedYetError
 from mwdblib import Malwarecage  # type: ignore
 from .api import parse
 
@@ -22,12 +21,8 @@ def main():
     mwdb = Malwarecage()
     mwdb.login(args.mwdb_user, args.mwdb_pass)
 
-    try:
-        cfg = mwdb.query_config(args.config)
-        iocs = parse(cfg.family, cfg.cfg)
-    except FamilyNotSupportedYetError:
-        logging.info("Family %s not supported yet...", cfg.family)
-        return
+    cfg = mwdb.query_config(args.config)
+    iocs = parse(cfg.family, cfg.cfg)
 
     if not iocs:
         # Nothing actionable found - skip the config
