@@ -222,8 +222,8 @@ def main():
 
     for cfg in mwdb.recent_configs():
         if cfg.type != "static":
-            # This library only works with "static" configs, i.e. configs
-            # extracted from malware/memory dumps
+            # This library only works with configs of type "static" 
+            # (default mwdb config type).
             continue
         iocs = parse(cfg.family, cfg.cfg)
         print(iocs.prettyprint())  # convert all IoCs to string
