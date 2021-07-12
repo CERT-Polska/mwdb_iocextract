@@ -1,4 +1,7 @@
+import string
 from typing import Dict, Any, List
+
+from Cryptodome.PublicKey.RSA import import_key
 from .model import LocationType, RsaKey, EcdsaCurve, IocCollection
 from .errors import ModuleAlreadyRegisteredError
 
@@ -323,4 +326,18 @@ def parse_kbot(config: Dict[str, Any]) -> IocCollection:
 def parse_alien(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     add_url(iocs, config, "C2 alt")
+    return iocs
+
+
+@module("cobaltstrike")
+def parse_cobaltstrike(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    if "PublicKey" in config:
+        pk = config["PublicKey"]
+        if isinstance(pk, str) and all(c in string.hexdigits for c in pk):
+            pubkey_bytes = bytes.fromhex(pk).rstrip(b"\x00")
+            iocs.try_add_rsa_from_asn1_bytes(pubkey_bytes)
+            del config["PublicKey"]
+
     return iocs
