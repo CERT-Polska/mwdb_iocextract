@@ -72,6 +72,13 @@ def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
             if "BEGIN PUBLIC" in enckey:
                 iocs.try_add_rsa_from_pem(enckey)
                 continue
+        if isinstance(enckey, str) and all(c in string.hexdigits for c in enckey):
+            enc_bytes = bytes.fromhex(enckey)
+            # asn1-encoded public key
+            if enc_bytes.startswith(b"\x30\x81\x9f\x30"):
+                iocs.try_add_rsa_from_asn1_bytes(enc_bytes.rstrip(b"\x00"))
+                continue
+
         raise NotImplementedError("Unknown RSA key type")
 
 
@@ -326,18 +333,4 @@ def parse_kbot(config: Dict[str, Any]) -> IocCollection:
 def parse_alien(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     add_url(iocs, config, "C2 alt")
-    return iocs
-
-
-@module("cobaltstrike")
-def parse_cobaltstrike(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
-
-    if "PublicKey" in config:
-        pk = config["PublicKey"]
-        if isinstance(pk, str) and all(c in string.hexdigits for c in pk):
-            pubkey_bytes = bytes.fromhex(pk).rstrip(b"\x00")
-            iocs.try_add_rsa_from_asn1_bytes(pubkey_bytes)
-            del config["PublicKey"]
-
     return iocs

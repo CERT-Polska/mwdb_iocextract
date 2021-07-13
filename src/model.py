@@ -200,8 +200,7 @@ class IocCollection:
         pem = PUBKEY_PEM_TEMPLATE.format(b64encode(blob).decode())
 
         try:
-            if pem:
-                self.add_rsa_key(RsaKey.parse_pem(pem))
+            self.add_rsa_key(RsaKey.parse_pem(pem))
         except IocExtractError:
             pass
 
