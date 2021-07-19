@@ -163,7 +163,7 @@ def parse_hawkeye(config: Dict[str, Any]) -> IocCollection:
 @module("trickbot")
 def parse_trickbot(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
-    if config["public_key"]:
+    if "public_key" in config:
         ecdsa = config["public_key"]
         iocs.add_ecdsa_curve(
             EcdsaCurve(ecdsa["t"], int(ecdsa["x"]), int(ecdsa["y"])),
