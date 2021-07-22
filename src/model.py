@@ -1,11 +1,16 @@
-from typing import List, Tuple, Union
-from Cryptodome.PublicKey import RSA  # type: ignore
-from urllib.parse import urlparse
-from malduck import base64, rsa  # type: ignore
 import re
+from base64 import b64encode
 from enum import Enum
-from .errors import IocExtractError
+from typing import List, Tuple, Union
+from urllib.parse import urlparse
+
+from Cryptodome.PublicKey import RSA  # type: ignore
+from malduck import base64, rsa  # type: ignore
 from pymisp import MISPObject  # type: ignore
+
+from .errors import IocExtractError
+
+PUBKEY_PEM_TEMPLATE = "-----BEGIN PUBLIC KEY-----\n{}\n-----END PUBLIC KEY-----"
 
 
 def is_ipv4(possible_ip: str):
@@ -188,6 +193,14 @@ class IocCollection:
         try:
             if pem:
                 self.add_rsa_key(RsaKey.parse_pem(pem))
+        except IocExtractError:
+            pass
+
+    def try_add_rsa_from_asn1_bytes(self, blob: bytes) -> None:
+        pem = PUBKEY_PEM_TEMPLATE.format(b64encode(blob).decode())
+
+        try:
+            self.add_rsa_key(RsaKey.parse_pem(pem))
         except IocExtractError:
             pass
 

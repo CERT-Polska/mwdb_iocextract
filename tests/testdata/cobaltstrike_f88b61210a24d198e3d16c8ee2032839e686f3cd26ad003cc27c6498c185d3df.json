@@ -1,0 +1,64 @@
+{
+    "Port": 80,
+    "type": "cobaltstrike",
+    "urls": [
+        {
+            "url": "31.42.177.52/visit.js"
+        }
+    ],
+    "Jitter": 0,
+    "MaxDNS": "Not Found",
+    "SpawnTo": "00000000000000000000000000000000",
+    "domains": [
+        {
+            "domain": "31.42.177.52"
+        }
+    ],
+    "C2Server": "31.42.177.52,/visit.js",
+    "DNS_Idle": "Not Found",
+    "KillDate": 0,
+    "PipeName": "Not Found",
+    "SSH_Host": "Not Found",
+    "SSH_Port": "Not Found",
+    "DNS_Sleep": "Not Found",
+    "PublicKey": "30819f300d06092a864886f70d010101050003818d00308189028181008715c57f8d358859b30b1ac83fc43ddc0a4d321cdf9d59405e48064476f5c51226b0905916c895b21b24f435b812af01e6cfe92b60963a97a60ea1434f58c35ce98a6e41462b0628a5317eab0e49a6a94a9e9b6b4fe86e04ea706f6bc0cec0dbbaef573c88565e2b833cb3a3cf9d40ee12e4877211c12dce7057a130ec12cee5020301000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "SleepTime": 60000,
+    "UserAgent": "Not Found",
+    "Watermark": 1359593325,
+    "BeaconType": [
+        "HTTP"
+    ],
+    "MaxGetSize": 1048576,
+    "Proxy_User": "Not Found",
+    "HttpPostUri": "/submit.php",
+    "Spawnto_x64": "%windir%\\sysnative\\rundll32.exe",
+    "Spawnto_x86": "%windir%\\syswow64\\rundll32.exe",
+    "bCFGCaution": "False",
+    "config_type": "static",
+    "CryptoScheme": 0,
+    "HttpGet_Verb": "GET",
+    "Proxy_Config": "Not Found",
+    "SSH_Username": "Not Found",
+    "bUsesCookies": "True",
+    "HttpPostChunk": 0,
+    "HttpPost_Verb": "POST",
+    "bStageCleanup": "False",
+    "Proxy_Behavior": "Use IE settings",
+    "Proxy_Password": "Not Found",
+    "HttpGet_Metadata": "Not Found",
+    "HttpPost_Metadata": "Not Found",
+    "ProcInject_Execute": [
+        "CreateThread",
+        "SetThreadContext",
+        "CreateRemoteThread",
+        "RtlCreateUserThread"
+    ],
+    "bProcInject_UseRWX": "True",
+    "SSH_Password_Pubkey": "Not Found",
+    "bProcInject_StartRWX": "True",
+    "SSH_Password_Plaintext": "Not Found",
+    "bProcInject_MinAllocSize": 0,
+    "ProcInject_AllocationMethod": "VirtualAllocEx",
+    "ProcInject_PrependAppend_x64": "Empty",
+    "ProcInject_PrependAppend_x86": "Empty"
+}

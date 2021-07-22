@@ -1,4 +1,7 @@
+import string
 from typing import Dict, Any, List
+
+from Cryptodome.PublicKey.RSA import import_key
 from .model import LocationType, RsaKey, EcdsaCurve, IocCollection
 from .errors import ModuleAlreadyRegisteredError
 
@@ -69,6 +72,13 @@ def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
             if "BEGIN PUBLIC" in enckey:
                 iocs.try_add_rsa_from_pem(enckey)
                 continue
+        if isinstance(enckey, str) and all(c in string.hexdigits for c in enckey):
+            enc_bytes = bytes.fromhex(enckey)
+            # asn1-encoded public key
+            if enc_bytes.startswith(b"\x30\x81\x9f\x30"):
+                iocs.try_add_rsa_from_asn1_bytes(enc_bytes.rstrip(b"\x00"))
+                continue
+
         raise NotImplementedError("Unknown RSA key type")
 
 
