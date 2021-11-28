@@ -99,7 +99,7 @@ def parse(config: Dict[str, Any], iocs: IocCollection) -> None:
     for name in ["publickey", "rsapub", "rsakey", "pubkey", "privkey"]:
         add_rsa_key(iocs, config, name)
 
-    for name in ["urls", "c2", "ips", "domains", "url", "cnc", "cncs", "hosts", "host", "cncurl"]:
+    for name in ["urls", "c2", "ips", "domains", "url", "cnc", "cncs", "hosts", "host", "cncurl", "dropper"]:
         add_url(iocs, config, name)
 
     if "password" in config:
