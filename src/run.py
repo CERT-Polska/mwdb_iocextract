@@ -1,6 +1,6 @@
 from .api import parse
 import argparse
-from mwdblib import Malwarecage  # type: ignore
+from mwdblib import MWDB  # type: ignore
 
 
 def main():
@@ -14,7 +14,7 @@ def main():
     )
     args = parser.parse_args()
 
-    mwdb = Malwarecage()
+    mwdb = MWDB()
     mwdb.login(args.mwdb_user, args.mwdb_pass)
 
     if args.config_id is not None:
