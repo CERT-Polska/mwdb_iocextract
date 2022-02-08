@@ -1,7 +1,7 @@
 import argparse
 import logging
 from pymisp import MISPEvent, PyMISP  # type: ignore
-from mwdblib import Malwarecage  # type: ignore
+from mwdblib import MWDB  # type: ignore
 from .api import parse
 
 logging.basicConfig(level=logging.INFO)
@@ -18,7 +18,7 @@ def main():
     parser.add_argument("misp_key", help="Misp key")
     args = parser.parse_args()
 
-    mwdb = Malwarecage()
+    mwdb = MWDB()
     mwdb.login(args.mwdb_user, args.mwdb_pass)
 
     cfg = mwdb.query_config(args.config)
