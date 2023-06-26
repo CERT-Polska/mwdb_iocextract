@@ -1,4 +1,5 @@
 import string
+from base64 import b64decode
 from typing import Dict, Any, List
 
 from Cryptodome.PublicKey.RSA import import_key
@@ -333,4 +334,24 @@ def parse_kbot(config: Dict[str, Any]) -> IocCollection:
 def parse_alien(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     add_url(iocs, config, "C2 alt")
+    return iocs
+
+
+@module("lockbit")
+def parse_lockbit(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    # as far as I can tell, this is a custom format used by lockbit
+    if "rsa_pub" in config:
+        try:
+            key_blob = b64decode(config["rsa_pub"])
+            e = int.from_bytes(key_blob[:4], "little")
+            n = int.from_bytes(key_blob[128:], "little")
+
+            if e == 0x10001:
+                iocs.add_rsa_key(RsaKey(n=n, e=e))
+                del config["rsa_pub"]
+        except Exception as e:
+            pass
+
     return iocs
