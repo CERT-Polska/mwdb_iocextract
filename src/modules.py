@@ -2,8 +2,6 @@ import string
 from base64 import b64decode
 from typing import Any, Dict, List
 
-from Cryptodome.PublicKey.RSA import import_key
-
 from .errors import ModuleAlreadyRegisteredError
 from .model import EcdsaCurve, IocCollection, LocationType, RsaKey
 
@@ -373,7 +371,7 @@ def parse_lockbit(config: Dict[str, Any]) -> IocCollection:
             if e == 0x10001:
                 iocs.add_rsa_key(RsaKey(n=n, e=e))
                 del config["rsa_pub"]
-        except Exception as e:
+        except Exception:
             pass
 
     return iocs
