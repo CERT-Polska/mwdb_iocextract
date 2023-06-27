@@ -1,7 +1,7 @@
 import re
 from base64 import b64encode
 from enum import Enum
-from typing import List, Tuple, Union, Optional
+from typing import List, Optional, Tuple, Union
 from urllib.parse import urlparse
 
 from Cryptodome.PublicKey import RSA  # type: ignore
