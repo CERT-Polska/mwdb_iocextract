@@ -1,7 +1,7 @@
 import re
 from base64 import b64encode
 from enum import Enum
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Optional
 from urllib.parse import urlparse
 
 from Cryptodome.PublicKey import RSA  # type: ignore
@@ -43,7 +43,7 @@ class LocationType(Enum):
 class RsaKey:
     """Represents a RSA public key used by malware"""
 
-    def __init__(self, n: int, e: int, d: int = None) -> None:
+    def __init__(self, n: int, e: int, d: Optional[int] = None) -> None:
         """Initialise RsaKey instance using n and e parameters directly"""
         self.n = n
         self.e = e
@@ -56,11 +56,11 @@ class RsaKey:
         return cls(key.n, key.e)
 
     @classmethod
-    def parse_base64(cls, b64: str) -> "RsaKey":
+    def parse_base64(cls, b64: Union[str, bytes]) -> "RsaKey":
         """Parse raw base64 key (used by danabot for example)"""
         blob = base64.decode(b64)
         key = rsa.import_key(blob)
-        return cls.parse_pem(key)
+        return cls.parse_pem(key)  # type: ignore
 
     def to_misp(self) -> MISPObject:
         mo = MISPObject("crypto-material", standalone=False)
