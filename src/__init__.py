@@ -1,6 +1,6 @@
 from .api import parse
-from .model import IocCollection, RsaKey, LocationType, NetworkLocation
-from .errors import IocExtractError, FamilyNotSupportedYetError
+from .errors import FamilyNotSupportedYetError, IocExtractError
+from .model import IocCollection, LocationType, NetworkLocation, RsaKey
 
 __all__ = [
     "parse",

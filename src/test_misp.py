@@ -1,7 +1,9 @@
 import argparse
 import logging
-from pymisp import MISPEvent, PyMISP  # type: ignore
+
 from mwdblib import MWDB  # type: ignore
+from pymisp import MISPEvent, PyMISP  # type: ignore
+
 from .api import parse
 
 logging.basicConfig(level=logging.INFO)

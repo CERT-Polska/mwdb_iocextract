@@ -1,0 +1,27 @@
+name: Lint and test on Python 3.10
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: CERT-Polska/lint-python-action@v2
+        with:
+          source: src/
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+            python-version: "3.10"
+      - run: pip install .
+      - run: pip install pytest==6.2.5
+      - name: Test with pytest
+        run: pytest
