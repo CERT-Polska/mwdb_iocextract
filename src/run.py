@@ -1,6 +1,8 @@
-from .api import parse
 import argparse
+
 from mwdblib import MWDB  # type: ignore
+
+from .api import parse
 
 
 def main():

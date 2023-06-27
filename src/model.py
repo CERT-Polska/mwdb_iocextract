@@ -10,19 +10,21 @@ from pymisp import MISPObject  # type: ignore
 
 from .errors import IocExtractError
 
-PUBKEY_PEM_TEMPLATE = "-----BEGIN PUBLIC KEY-----\n{}\n-----END PUBLIC KEY-----"
+PUBKEY_PEM_TEMPLATE = (
+    "-----BEGIN PUBLIC KEY-----\n{}\n-----END PUBLIC KEY-----"
+)
 
 
 def is_ipv4(possible_ip: str):
-    """ Very simple heuristics to distinguish IPs from domains """
+    """Very simple heuristics to distinguish IPs from domains"""
     return re.match(
         "^[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}$", possible_ip
     )
 
 
 class LocationType(Enum):
-    """ Type of malicious URL. Not all URLs in malware have the
-    same role, and often it's necessary to treat them differently. """
+    """Type of malicious URL. Not all URLs in malware have the
+    same role, and often it's necessary to treat them differently."""
 
     # C&C server, usually administrated by criminals. Malware connects to
     # it (usually with a custom protocol) to get new commands and updates.
@@ -39,23 +41,23 @@ class LocationType(Enum):
 
 
 class RsaKey:
-    """ Represents a RSA public key used by malware"""
+    """Represents a RSA public key used by malware"""
 
     def __init__(self, n: int, e: int, d: int = None) -> None:
-        """ Initialise RsaKey instance using n and e parameters directly """
+        """Initialise RsaKey instance using n and e parameters directly"""
         self.n = n
         self.e = e
         self.d = d
 
     @classmethod
     def parse_pem(cls, pem: str) -> "RsaKey":
-        """ Parse PEM ("-----BEGIN PUBLIC KEY" header) key """
+        """Parse PEM ("-----BEGIN PUBLIC KEY" header) key"""
         key = RSA.import_key(pem)
         return cls(key.n, key.e)
 
     @classmethod
     def parse_base64(cls, b64: str) -> "RsaKey":
-        """ Parse raw base64 key (used by danabot for example) """
+        """Parse raw base64 key (used by danabot for example)"""
         blob = base64.decode(b64)
         key = rsa.import_key(blob)
         return cls.parse_pem(key)
@@ -71,13 +73,13 @@ class RsaKey:
         return mo
 
     def prettyprint(self) -> str:
-        """ Pretty print for debugging """
+        """Pretty print for debugging"""
         d_part = f" d={self.d}" if self.d else ""
         return f"RsaKey n={self.n} e={self.e}{d_part}"
 
 
 class EcdsaCurve:
-    """ Represents a ECDSA curve used by malware"""
+    """Represents a ECDSA curve used by malware"""
 
     def __init__(self, t: str, x: int, y: int) -> None:
         self.t = t
@@ -100,8 +102,7 @@ class EcdsaCurve:
 
 
 class NetworkLocation:
-    """ Represents a network location. Can be a domain, ip with a port, etc.
-    """
+    """Represents a network location. Can be a domain, ip with a port, etc."""
 
     def __init__(
         self, url: str, location_type: LocationType = LocationType.CNC
@@ -159,15 +160,15 @@ class NetworkLocation:
         return obj
 
     def prettyprint(self) -> str:
-        """ Pretty print for debugging """
+        """Pretty print for debugging"""
         return "NetLoc " + self.pretty_url
 
 
 class IocCollection:
-    """ Represents a collection of parsed IoCs """
+    """Represents a collection of parsed IoCs"""
 
     def __init__(self) -> None:
-        """ Creates an empty IocCollection instance """
+        """Creates an empty IocCollection instance"""
         self.rsa_keys: List[RsaKey] = []
         self.ecdsa_curves: List[EcdsaCurve] = []
         self.keys: List[Tuple[str, str]] = []  # (keytype, hexencoded key)
@@ -186,7 +187,7 @@ class IocCollection:
         self.ecdsa_curves.append(ecdsa_curve)
 
     def add_key(self, key_type: str, xor_key: str) -> None:
-        """ Add a hex encoded other raw key - for example, xor key """
+        """Add a hex encoded other raw key - for example, xor key"""
         self.keys.append((key_type, xor_key))
 
     def try_add_rsa_from_pem(self, pem: str) -> None:
@@ -289,7 +290,7 @@ class IocCollection:
         return to_return
 
     def prettyprint(self) -> str:
-        """ Pretty print for debugging """
+        """Pretty print for debugging"""
         result = []
         for rsa_key in self.rsa_keys:
             result.append(rsa_key.prettyprint())

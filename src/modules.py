@@ -1,16 +1,17 @@
 import string
 from base64 import b64decode
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 from Cryptodome.PublicKey.RSA import import_key
-from .model import LocationType, RsaKey, EcdsaCurve, IocCollection
-from .errors import ModuleAlreadyRegisteredError
 
+from .errors import ModuleAlreadyRegisteredError
+from .model import EcdsaCurve, IocCollection, LocationType, RsaKey
 
 modules: Dict[str, Any] = {}
 
 
 # Utils
+
 
 def module(name):
     def decorator(func):
@@ -53,14 +54,20 @@ def add_url(iocs: IocCollection, config: Dict[str, Any], key: str) -> None:
             else:
                 raise NotImplementedError("Can't find a host for the domain")
         else:
-            raise NotImplementedError("The domain has to be either a string or a list")
+            raise NotImplementedError(
+                "The domain has to be either a string or a list"
+            )
 
 
 def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
     for enckey in safe_get_list(config, key):
         if isinstance(enckey, dict):
-            if "n" in enckey and 'd' in enckey:
-                iocs.add_rsa_key(RsaKey(int(enckey["n"]), int(enckey["e"]), int(enckey["d"])))
+            if "n" in enckey and "d" in enckey:
+                iocs.add_rsa_key(
+                    RsaKey(
+                        int(enckey["n"]), int(enckey["e"]), int(enckey["d"])
+                    )
+                )
                 continue
             if "n" in enckey:
                 iocs.add_rsa_key(RsaKey(int(enckey["n"]), int(enckey["e"])))
@@ -73,7 +80,9 @@ def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
             if "BEGIN PUBLIC" in enckey:
                 iocs.try_add_rsa_from_pem(enckey)
                 continue
-        if isinstance(enckey, str) and all(c in string.hexdigits for c in enckey):
+        if isinstance(enckey, str) and all(
+            c in string.hexdigits for c in enckey
+        ):
             enc_bytes = bytes.fromhex(enckey)
             # asn1-encoded public key
             if enc_bytes.startswith(b"\x30\x81\x9f\x30"):
@@ -96,11 +105,24 @@ def add_mutex(iocs: IocCollection, config: Dict, key: str) -> None:
 
 # Generic handlers
 
+
 def parse(config: Dict[str, Any], iocs: IocCollection) -> None:
     for name in ["publickey", "rsapub", "rsakey", "pubkey", "privkey"]:
         add_rsa_key(iocs, config, name)
 
-    for name in ["urls", "c2", "ips", "domains", "url", "cnc", "cncs", "hosts", "host", "cncurl", "dropper"]:
+    for name in [
+        "urls",
+        "c2",
+        "ips",
+        "domains",
+        "url",
+        "cnc",
+        "cncs",
+        "hosts",
+        "host",
+        "cncurl",
+        "dropper",
+    ]:
         add_url(iocs, config, name)
 
     if "password" in config:
@@ -293,7 +315,7 @@ def parse_pushdo(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
     if "cfgkey" in config:
         add_rsa_key(iocs, config, "cfgkey")
-        del(config["cfgkey"])
+        del config["cfgkey"]
     return iocs
 
 
