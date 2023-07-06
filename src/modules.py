@@ -375,3 +375,13 @@ def parse_lockbit(config: Dict[str, Any]) -> IocCollection:
             pass
 
     return iocs
+
+
+@module("formbook")
+def parse_formbook(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    if "decoy_domains" in config:
+        del config["decoy_domains"]
+
+    return iocs
