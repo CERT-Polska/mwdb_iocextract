@@ -314,9 +314,9 @@ class IocCollection:
         for drop_filename in self.dropped_filenames:
             result.append("Drop " + drop_filename)
         for email in self.emails_to:
-            result.append("Email To " + email)
+            result.append("EmailTo " + email)
         for email in self.emails_from:
-            result.append("Email From " + email)
+            result.append("EmailFrom " + email)
         for ransom_message in self.ransom_messages:
             result.append("RansomMessage: " + ransom_message)
         for campaign_id in self.campaign_ids:
