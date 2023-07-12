@@ -114,24 +114,35 @@ class NetworkLocation:
         self.location_type = location_type
 
     @property
-    def ip(self):
+    def ip(self) -> Optional[str]:
         if self.url.hostname and is_ipv4(self.url.hostname):
             return self.url.hostname
         return None
 
     @property
-    def domain(self):
+    def domain(self) -> Optional[str]:
         if self.url.hostname and not is_ipv4(self.url.hostname):
             return self.url.hostname
         return None
 
     @property
-    def port(self):
+    def port(self) -> Optional[int]:
         return self.url.port
 
     @property
-    def path(self):
+    def path(self) -> str:
         return self.url.path
+
+    @property
+    def query(self) -> str:
+        return self.url.query
+
+    @property
+    def scheme(self) -> Optional[str]:
+        scheme = self.url.scheme
+        if scheme == "unknown":
+            return None
+        return scheme
 
     @property
     def pretty_url(self):
@@ -141,8 +152,22 @@ class NetworkLocation:
         return url
 
     def to_misp(self) -> MISPObject:
-        obj = MISPObject("url", standalone=False)
-        obj.add_attribute("url", self.pretty_url)
+        if any((self.scheme, self.path, self.query)):
+            misp_object_type = "url"
+        else:
+            misp_object_type = "domain-ip"
+
+        obj = MISPObject(misp_object_type, standalone=False)
+
+        # url-specific attributes
+        if self.scheme:
+            obj.add_attribute("url", self.pretty_url)
+        if self.path:
+            obj.add_attribute("resource_path", self.path)
+        if self.query:
+            obj.add_attribute("query_string", self.query)
+
+        # generic attributes that apply to both url and domain-ip
         if self.ip:
             a = obj.add_attribute("ip", self.ip)
             if a is not None:
@@ -153,10 +178,7 @@ class NetworkLocation:
                 a.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.port:
             obj.add_attribute("port", self.port)
-        if self.path:
-            obj.add_attribute("resource_path", self.path)
-        if self.url.query:
-            obj.add_attribute("query_string", self.url.query)
+
         return obj
 
     def prettyprint(self) -> str:
