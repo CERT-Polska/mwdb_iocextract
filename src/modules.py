@@ -390,3 +390,17 @@ def parse_agenttesla(config: Dict[str, Any]) -> IocCollection:
         del config["email_to"]
 
     return iocs
+
+
+@module("formbook")
+def parse_formbook(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    if "urls" in config:
+        del config["urls"]
+
+    if "c2_url" in config:
+        iocs.try_add_url(config["c2_url"])
+        del config["c2_url"]
+
+    return iocs
