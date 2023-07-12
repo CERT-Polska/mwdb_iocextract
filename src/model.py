@@ -176,7 +176,8 @@ class IocCollection:
         self.network_locations: List[NetworkLocation] = []
         self.mutexes: List[str] = []
         self.dropped_filenames: List[str] = []
-        self.emails: List[str] = []
+        self.emails_to: List[str] = []
+        self.emails_from: List[str] = []
         self.ransom_messages: List[str] = []
         self.campaign_ids: List[str] = []
 
@@ -247,8 +248,11 @@ class IocCollection:
     def add_mutex(self, mutex: str) -> None:
         self.mutexes.append(mutex)
 
-    def add_email(self, email: str) -> None:
-        self.emails.append(email)
+    def add_email_to(self, email: str) -> None:
+        self.emails_to.append(email)
+
+    def add_email_from(self, email: str) -> None:
+        self.emails_from.append(email)
 
     def add_ransom_message(self, ransom_message: str) -> None:
         self.ransom_messages.append(ransom_message)
@@ -282,11 +286,14 @@ class IocCollection:
         for netloc in self.network_locations:
             to_return.append(netloc.to_misp())
         # TODO self.dropped_filenames
-        for email in self.emails:
+        for email in self.emails_to:
             obj = MISPObject("email", standalone=False)
             obj.add_attribute("to", email)
             to_return.append(obj)
-
+        for email in self.emails_from:
+            obj = MISPObject("email", standalone=False)
+            obj.add_attribute("from", email)
+            to_return.append(obj)
         return to_return
 
     def prettyprint(self) -> str:
@@ -306,8 +313,10 @@ class IocCollection:
             result.append("Mutex " + mutex)
         for drop_filename in self.dropped_filenames:
             result.append("Drop " + drop_filename)
-        for email in self.emails:
-            result.append("Email " + email)
+        for email in self.emails_to:
+            result.append("EmailTo " + email)
+        for email in self.emails_from:
+            result.append("EmailFrom " + email)
         for ransom_message in self.ransom_messages:
             result.append("RansomMessage: " + ransom_message)
         for campaign_id in self.campaign_ids:
@@ -323,7 +332,8 @@ class IocCollection:
                 self.network_locations,
                 self.mutexes,
                 self.dropped_filenames,
-                self.emails,
+                self.emails_to,
+                self.emails_from,
                 self.ransom_messages,
                 self.campaign_ids,
             ]

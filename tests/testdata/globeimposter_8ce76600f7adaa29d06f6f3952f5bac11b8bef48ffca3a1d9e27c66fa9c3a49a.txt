@@ -1,5 +1,5 @@
-Email sherhagdomski@godzym.bid
-Email sherhagdomski@baumank.com
+EmailTo sherhagdomski@godzym.bid
+EmailTo sherhagdomski@baumank.com
 RansomMessage: 
 <html>
     <style type="text/css">

@@ -132,7 +132,7 @@ def parse(config: Dict[str, Any], iocs: IocCollection) -> None:
 
     for name in ["email", "emails"]:
         for email in safe_get_list(config, name):
-            iocs.add_email(email)
+            iocs.add_email_to(email)
 
     for ransom_message in safe_get_list(config, "ransommessage"):
         iocs.add_ransom_message(ransom_message)
@@ -186,7 +186,7 @@ def parse_hawkeye(config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
 
     if config.get("EmailUsername"):
-        iocs.add_email(config["EmailUsername"])
+        iocs.add_email_to(config["EmailUsername"])
 
     return iocs
 
@@ -373,6 +373,21 @@ def parse_lockbit(config: Dict[str, Any]) -> IocCollection:
                 del config["rsa_pub"]
         except Exception:
             pass
+
+    return iocs
+
+
+@module("agenttesla")
+def parse_agenttesla(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    if config.get("email"):
+        iocs.add_email_from(config["email"])
+        del config["email"]
+
+    if config.get("email_to"):
+        iocs.add_email_to(config["email_to"])
+        del config["email_to"]
 
     return iocs
 
