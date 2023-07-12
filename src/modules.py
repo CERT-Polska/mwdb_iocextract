@@ -375,3 +375,17 @@ def parse_lockbit(config: Dict[str, Any]) -> IocCollection:
             pass
 
     return iocs
+
+
+@module("formbook")
+def parse_formbook(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    if "urls" in config:
+        del config["urls"]
+
+    if "c2_url" in config:
+        iocs.try_add_url(config["c2_url"])
+        del config["c2_url"]
+
+    return iocs
