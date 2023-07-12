@@ -140,12 +140,14 @@ class NetworkLocation:
     @property
     def scheme(self) -> Optional[str]:
         scheme = self.url.scheme
+        # `unknown://` scheme is a placeholder used for URLs with a missing scheme
+        # that we unfortunately have to support.
         if scheme == "unknown":
             return None
         return scheme
 
     @property
-    def pretty_url(self):
+    def pretty_url(self) -> str:
         url = self.url.geturl()
         if url.startswith("unknown://"):
             return url[len("unknown://") :]
@@ -164,6 +166,8 @@ class NetworkLocation:
             obj.add_attribute("url", self.pretty_url)
         if self.path:
             obj.add_attribute("resource_path", self.path)
+        if self.url.fragment:
+            obj.add_attribute("fragment", self.url.fragment)
         if self.query:
             obj.add_attribute("query_string", self.query)
 
