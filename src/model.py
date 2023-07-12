@@ -154,7 +154,7 @@ class NetworkLocation:
         return url
 
     def to_misp(self) -> MISPObject:
-        if any((self.scheme, self.path, self.query)):
+        if any((self.scheme, self.path, self.query, self.url.fragment)):
             misp_object_type = "url"
         else:
             misp_object_type = "domain-ip"
