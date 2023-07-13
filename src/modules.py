@@ -404,3 +404,13 @@ def parse_formbook(config: Dict[str, Any]) -> IocCollection:
         del config["c2_url"]
 
     return iocs
+
+
+@module("cobaltstrike")
+def parse_cobaltstrike(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    for url in config.get("stager_url", []):
+        iocs.try_add_url(url["url"])
+
+    return iocs
