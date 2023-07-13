@@ -26,13 +26,6 @@ class TestParseRegression(unittest.TestCase):
             with open(testdir + expected_file_txt, "rb") as exp:
                 expected_data = exp.read().decode("utf-8")
 
-            with open("/tmp/expected", "w") as f:
-                f.write(expected_data)
-            
-            with open("/tmp/got", "w") as f:
-                f.write(iocs.prettyprint() + "\n")
-                
-
             if expected_data != iocs.prettyprint() + "\n":
                 print("EXPECTED")
                 print(expected_data)
