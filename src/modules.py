@@ -419,7 +419,7 @@ def parse_cobaltstrike(config: Dict[str, Any]) -> IocCollection:
         if beacon_type in ("HTTP", "HTTPS"):
             scheme = beacon_type.lower()
             port = config["port"]
-            c2 = config['server,get-uri'].split(",")
+            c2 = config["server,get-uri"].split(",")
 
             for i in range(0, len(c2), 2):
                 hostname, path = c2[i], c2[i + 1]
