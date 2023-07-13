@@ -320,6 +320,10 @@ class IocCollection:
             obj = MISPObject("email", standalone=False)
             obj.add_attribute("from", email)
             to_return.append(obj)
+
+        # filter out objects without any attributes
+        to_return = list(filter(lambda x: bool(x.attributes), to_return))
+
         return to_return
 
     def prettyprint(self) -> str:
