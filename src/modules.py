@@ -404,3 +404,27 @@ def parse_formbook(config: Dict[str, Any]) -> IocCollection:
         del config["c2_url"]
 
     return iocs
+
+
+@module("cobaltstrike")
+def parse_cobaltstrike(config: Dict[str, Any]) -> IocCollection:
+    iocs = IocCollection()
+
+    if config.get("payload_type", "").endswith("stager"):
+        for url_row in config.get("stager_url", []):
+            url = url_row["url"]
+            iocs.try_add_url(url)
+    else:
+        beacon_type = config.get("beacon_type", [None])[0]
+        if beacon_type in ("HTTP", "HTTPS"):
+            scheme = beacon_type.lower()
+            port = config["port"]
+            c2 = config["server,get-uri"].split(",")
+
+            for i in range(0, len(c2), 2):
+                hostname, path = c2[i], c2[i + 1]
+                iocs.try_add_url(f"{scheme}://{hostname}:{port}{path}")
+
+            del config["urls"]
+
+    return iocs

@@ -1,0 +1,77 @@
+{
+    "ips": [
+        {
+            "ip": "119.12.167.229"
+        }
+    ],
+    "port": 19862,
+    "type": "cobaltstrike",
+    "urls": [
+        {
+            "url": "119.12.167.229/__utm.gif"
+        }
+    ],
+    "jitter": 0,
+    "maxdns": 255,
+    "spawnto": "00000000000000000000000000000000",
+    "version": 3,
+    "dns_Idle": "0.0.0.0",
+    "get-verb": "GET",
+    "get_uris": [
+        {
+            "uri": "/__utm.gif"
+        }
+    ],
+    "killdate": 0,
+    "post-uri": "/submit.php",
+    "dns_Sleep": 0,
+    "post-verb": "POST",
+    "publickey": "30819f300d06092a864886f70d010101050003818d0030818902818100af8ada2384158d638e4aec6a2bcf300448f36537a3ca4e9ca9401ef1b20c6dc1d9200a29f632daf5aa63a1f5f12f8d3fdce7e5443a0702545d99ac25fa479b2a31f86e3563dc14a22e8a44f9062f8868386d507e0292a5e0d906b41abcef99312eb713eff9159e7ff07860fe5855c3c1e5f7412e13684b6a8136b4a3b6bc43df020301000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "sleeptime": 60000,
+    "useragent": "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0; MASAJS)",
+    "watermark": 1873433027,
+    "maxgetsize": 1048576,
+    "bcfgcaution": "False",
+    "beacon_type": [
+        "HTTPS"
+    ],
+    "config_type": "static",
+    "spawnto_x64": "%windir%\\sysnative\\rundll32.exe",
+    "spawnto_x86": "%windir%\\syswow64\\rundll32.exe",
+    "uses_cookies": "True",
+    "bstagecleanup": "False",
+    "crypto_scheme": 0,
+    "proxy_behavior": "Use IE settings",
+    "server,get-uri": "119.12.167.229,/__utm.gif",
+    "http_get_header": [
+        "Build Metadata",
+        "Base64 decode",
+        "Build End",
+        "Header Cookie"
+    ],
+    "http_post_chank": 0,
+    "http_post_header": [
+        "Const_header Content-Type: application/octet-stream",
+        "Build SessionId",
+        "Parameter id",
+        "Build End",
+        "Build Output",
+        "print",
+        "Build End"
+    ],
+    "process-inject-execute": [
+        "CreateThread",
+        "SetThreadContext",
+        "CreateRemoteThread",
+        "RtlCreateUserThread"
+    ],
+    "process-inject-use-rwx": "True",
+    "process-inject-min_alloc": 0,
+    "process-inject-start-rwx": "True",
+    "Malleable_C2_Instructions": [
+        "print"
+    ],
+    "process-inject-transform-x64": "Empty",
+    "process-inject-transform-x86": "Empty",
+    "process-inject-allocation-method": "VirtualAllocEx"
+}
