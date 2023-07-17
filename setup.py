@@ -9,9 +9,9 @@ with open("requirements.txt", "r") as fh:
 setuptools.setup(
     name="mwdb-iocextract",
     version="1.2.0",
-    author="CERT Polska",
     data_files=[('requirements.txt', ['requirements.txt'])],
-    author_email="msm@cert.pl",
+    author="CERT Polska",
+    author_email="info@cert.pl",
     package_dir={"mwdb_iocextract": "src"},
     packages=["mwdb_iocextract"],
     description="Mwdb config parser",
