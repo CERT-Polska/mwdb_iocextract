@@ -1,12 +1,12 @@
 import re
 from base64 import b64encode
 from enum import Enum
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
 from Cryptodome.PublicKey import RSA  # type: ignore
 from malduck import base64, rsa  # type: ignore
-from pymisp import MISPObject  # type: ignore
+from pymisp import MISPAttribute, MISPObject  # type: ignore
 
 from .errors import IocExtractError
 
@@ -163,7 +163,10 @@ class NetworkLocation:
 
         # url-specific attributes
         if self.scheme:
-            obj.add_attribute("url", self.pretty_url)
+            url = cast(
+                MISPAttribute, obj.add_attribute("url", self.pretty_url)
+            )
+            url.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.path:
             obj.add_attribute("resource_path", self.path)
         if self.url.fragment:
@@ -173,13 +176,13 @@ class NetworkLocation:
 
         # generic attributes that apply to both url and domain-ip
         if self.ip:
-            a = obj.add_attribute("ip", self.ip)
-            if a is not None:
-                a.add_tag(f"mwdb:location_type:{self.location_type.value}")
+            ip = cast(MISPAttribute, obj.add_attribute("ip", self.ip))
+            ip.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.domain:
-            a = obj.add_attribute("domain", self.domain)
-            if a is not None:
-                a.add_tag(f"mwdb:location_type:{self.location_type.value}")
+            domain = cast(
+                MISPAttribute, obj.add_attribute("domain", self.domain)
+            )
+            domain.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.port:
             obj.add_attribute("port", self.port)
 
