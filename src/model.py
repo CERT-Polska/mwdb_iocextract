@@ -164,8 +164,7 @@ class NetworkLocation:
         # url-specific attributes
         if self.scheme:
             url = obj.add_attribute("url", self.pretty_url)
-            if url:
-                url.add_tag(f"mwdb:location_type:{self.location_type.value}")
+            url.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.path:
             obj.add_attribute("resource_path", self.path)
         if self.url.fragment:
@@ -175,13 +174,11 @@ class NetworkLocation:
 
         # generic attributes that apply to both url and domain-ip
         if self.ip:
-            a = obj.add_attribute("ip", self.ip)
-            if a is not None:
-                a.add_tag(f"mwdb:location_type:{self.location_type.value}")
+            ip = obj.add_attribute("ip", self.ip)
+            ip.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.domain:
-            a = obj.add_attribute("domain", self.domain)
-            if a is not None:
-                a.add_tag(f"mwdb:location_type:{self.location_type.value}")
+            domain = obj.add_attribute("domain", self.domain)
+            domain.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.port:
             obj.add_attribute("port", self.port)
 
