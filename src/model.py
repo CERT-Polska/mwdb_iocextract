@@ -163,7 +163,9 @@ class NetworkLocation:
 
         # url-specific attributes
         if self.scheme:
-            obj.add_attribute("url", self.pretty_url)
+            url = obj.add_attribute("url", self.pretty_url)
+            if url:
+                url.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.path:
             obj.add_attribute("resource_path", self.path)
         if self.url.fragment:
