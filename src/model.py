@@ -294,19 +294,19 @@ class IocCollection:
         for ecdsa_curve in self.ecdsa_curves:
             to_return.append(ecdsa_curve.to_misp())
         if self.keys:
-            crypto_obj = MISPObject("crypto-material", standalone=False)
             for k in self.keys:
+                crypto_obj = MISPObject("crypto-material", standalone=False)
                 crypto_obj.add_attribute("type", k[0])
                 crypto_obj.add_attribute("generic-symmetric-key", k[1])
                 to_return.append(crypto_obj)
         if self.passwords:
-            credential_obj = MISPObject("credential", standalone=False)
             for password in self.passwords:
+                credential_obj = MISPObject("credential", standalone=False)
                 credential_obj.add_attribute("password", password)
                 to_return.append(credential_obj)
         if self.mutexes:
-            mutex_obj = MISPObject("mutex", standalone=False)
             for mutex in self.mutexes:
+                mutex_obj = MISPObject("mutex", standalone=False)
                 mutex_obj.add_attribute("name", mutex)
                 to_return.append(mutex_obj)
         for netloc in self.network_locations:
