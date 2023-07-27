@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 from Cryptodome.PublicKey import RSA  # type: ignore
 from malduck import base64, rsa  # type: ignore
-from pymisp import MISPObject, MISPAttribute  # type: ignore
+from pymisp import MISPAttribute, MISPObject  # type: ignore
 
 from .errors import IocExtractError
 
