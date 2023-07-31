@@ -8,7 +8,7 @@ with open("requirements.txt", "r") as fh:
 
 setuptools.setup(
     name="mwdb-iocextract",
-    version="1.2.0",
+    version="1.2.1",
     data_files=[('requirements.txt', ['requirements.txt'])],
     author="CERT Polska",
     author_email="info@cert.pl",
