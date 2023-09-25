@@ -167,7 +167,7 @@ class NetworkLocation:
                 MISPAttribute, obj.add_attribute("url", self.pretty_url)
             )
             url.add_tag(f"mwdb:location_type:{self.location_type.value}")
-        if self.path:
+        if self.path and self.path != "/":
             obj.add_attribute("resource_path", self.path)
         if self.url.fragment:
             obj.add_attribute("fragment", self.url.fragment)
