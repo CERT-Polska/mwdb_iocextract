@@ -75,7 +75,7 @@ def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
                 iocs.add_rsa_key(RsaKey(int(enckey[0]), int(enckey[1])))
                 continue
         if isinstance(enckey, str):
-            if "BEGIN PUBLIC" in enckey:
+            if "BEGIN PUBLIC" in enckey or "BEGIN RSA PUBLIC" in enckey:
                 iocs.try_add_rsa_from_pem(enckey)
                 continue
         if isinstance(enckey, str) and all(
