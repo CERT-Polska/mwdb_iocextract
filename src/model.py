@@ -185,7 +185,9 @@ class NetworkLocation:
                 MISPAttribute, obj.add_attribute("domain", self.domain)
             )
             if domain:
-                domain.add_tag(f"mwdb:location_type:{self.location_type.value}")
+                domain.add_tag(
+                    f"mwdb:location_type:{self.location_type.value}"
+                )
         if self.port:
             obj.add_attribute("port", self.port)
 
