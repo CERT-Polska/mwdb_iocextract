@@ -1,0 +1,20 @@
+name: Release new mwdb-iocextract version
+
+on:
+  push:
+    tags: 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build package
+      run: |
+        pip3 install setuptools wheel
+        python3 setup.py bdist_wheel
+    - name: Publish to PyPi
+      uses: pypa/gh-action-pypi-publish@v1.8.11
+      with:
+        user: __token__
+        password: ${{ secrets.pypi_password }}
