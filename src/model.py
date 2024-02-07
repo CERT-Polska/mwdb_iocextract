@@ -166,7 +166,8 @@ class NetworkLocation:
             url = cast(
                 MISPAttribute, obj.add_attribute("url", self.pretty_url)
             )
-            url.add_tag(f"mwdb:location_type:{self.location_type.value}")
+            if url:
+                url.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.path and self.path != "/":
             obj.add_attribute("resource_path", self.path)
         if self.url.fragment:
@@ -177,12 +178,16 @@ class NetworkLocation:
         # generic attributes that apply to both url and domain-ip
         if self.ip:
             ip = cast(MISPAttribute, obj.add_attribute("ip", self.ip))
-            ip.add_tag(f"mwdb:location_type:{self.location_type.value}")
+            if ip:
+                ip.add_tag(f"mwdb:location_type:{self.location_type.value}")
         if self.domain:
             domain = cast(
                 MISPAttribute, obj.add_attribute("domain", self.domain)
             )
-            domain.add_tag(f"mwdb:location_type:{self.location_type.value}")
+            if domain:
+                domain.add_tag(
+                    f"mwdb:location_type:{self.location_type.value}"
+                )
         if self.port:
             obj.add_attribute("port", self.port)
 
