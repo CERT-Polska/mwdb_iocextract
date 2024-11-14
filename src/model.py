@@ -2,6 +2,7 @@ import re
 from base64 import b64encode
 from enum import Enum
 from typing import List, Optional, Tuple, Union, cast
+import logging
 from urllib.parse import urlparse
 
 from Cryptodome.PublicKey import RSA  # type: ignore
@@ -9,6 +10,8 @@ from malduck import base64, rsa  # type: ignore
 from pymisp import MISPAttribute, MISPObject  # type: ignore
 
 from .errors import IocExtractError
+
+log = logging.getLogger(__name__)
 
 PUBKEY_PEM_TEMPLATE = (
     "-----BEGIN PUBLIC KEY-----\n{}\n-----END PUBLIC KEY-----"
@@ -230,7 +233,7 @@ class IocCollection:
             if pem:
                 self.add_rsa_key(RsaKey.parse_pem(pem))
         except IocExtractError:
-            pass
+            log.warn("Failed to parse a RSA key from PEM")
 
     def try_add_rsa_from_asn1_bytes(self, blob: bytes) -> None:
         pem = PUBKEY_PEM_TEMPLATE.format(b64encode(blob).decode())
@@ -238,13 +241,13 @@ class IocCollection:
         try:
             self.add_rsa_key(RsaKey.parse_pem(pem))
         except IocExtractError:
-            pass
+            log.warn("Failed to parse a RSA key from ASN1")
 
     def try_add_rsa_from_base64(self, pem: str) -> None:
         try:
             self.add_rsa_key(RsaKey.parse_base64(pem))
         except IocExtractError:
-            pass
+            log.warn("Failed to parse a RSA key from base64")
 
     def add_network_location(self, netloc: NetworkLocation) -> None:
         self.network_locations.append(netloc)
@@ -253,13 +256,17 @@ class IocCollection:
         self, host: str, port: Union[str, int], schema: str = "unknown"
     ) -> None:
         if isinstance(port, str):
-            port_val = int(port)
+            try:
+                port_val = int(port)
+            except ValueError:
+                log.warn("Failed to add URL from host_port")    
+                return
         else:
             port_val = port
         try:
             self.try_add_url(f"{schema}://{host}:{port_val}")
         except IocExtractError:
-            pass
+            log.warn("Failed to add URL from host_port")
 
     def try_add_url(
         self, url: str, location_type: LocationType = LocationType.CNC
@@ -271,7 +278,7 @@ class IocCollection:
                 NetworkLocation(url, location_type=location_type)
             )
         except IocExtractError:
-            pass
+            log.warn("Failed to add URL directly")
 
     def add_password(self, password: str) -> None:
         self.passwords.append(password)

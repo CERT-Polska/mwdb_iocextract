@@ -1,15 +1,26 @@
 import string
 from base64 import b64decode
 from typing import Any, Dict, List
+import logging
 
-from .errors import ModuleAlreadyRegisteredError
+from .errors import ModuleAlreadyRegisteredError, IocExtractError
 from .model import EcdsaCurve, IocCollection, LocationType, RsaKey
 
 modules: Dict[str, Any] = {}
+log = logging.getLogger(__name__)
 
 
-# Utils
+class CantFindAHostForTheDomain(IocExtractError):
+    """Can't find a host for the domain when adding url."""
+    pass
 
+class DomainHasToBeAStringOrADict(IocExtractError):
+    """Adding URL from something other than string or a dict."""
+    pass
+
+class UnknownRsaKeyType(IocExtractError):
+    """Can't guess the RSA key format."""
+    pass
 
 def module(name):
     def decorator(func):
@@ -50,11 +61,9 @@ def add_url(iocs: IocCollection, config: Dict[str, Any], key: str) -> None:
                         iocs.try_add_url(domain[hostkey])
                     break
             else:
-                raise NotImplementedError("Can't find a host for the domain")
+                raise CantFindAHostForTheDomain()
         else:
-            raise NotImplementedError(
-                "The domain has to be either a string or a list"
-            )
+            raise DomainHasToBeAStringOrADict()
 
 
 def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
@@ -87,7 +96,7 @@ def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
                 iocs.try_add_rsa_from_asn1_bytes(enc_bytes.rstrip(b"\x00"))
                 continue
 
-        raise NotImplementedError("Unknown RSA key type")
+        raise UnknownRsaKeyType()
 
 
 def add_key(iocs: IocCollection, config: Dict, key: str, keytype: str) -> None:
@@ -106,7 +115,10 @@ def add_mutex(iocs: IocCollection, config: Dict, key: str) -> None:
 
 def parse(config: Dict[str, Any], iocs: IocCollection) -> None:
     for name in ["publickey", "rsapub", "rsakey", "pubkey", "privkey"]:
-        add_rsa_key(iocs, config, name)
+        try:
+            add_rsa_key(iocs, config, name)
+        except UnknownRsaKeyType:
+            log.warn("Unknown RSA key type")
 
     for name in [
         "urls",
@@ -372,7 +384,7 @@ def parse_lockbit(config: Dict[str, Any]) -> IocCollection:
                 iocs.add_rsa_key(RsaKey(n=n, e=e))
                 del config["rsa_pub"]
         except Exception:
-            pass
+            log.warn("Failed to parse a lockbit key")
 
     return iocs
 
