@@ -12,15 +12,21 @@ log = logging.getLogger(__name__)
 
 class CantFindAHostForTheDomain(IocExtractError):
     """Can't find a host for the domain when adding url."""
+
     pass
+
 
 class DomainHasToBeAStringOrADict(IocExtractError):
     """Adding URL from something other than string or a dict."""
+
     pass
+
 
 class UnknownRsaKeyType(IocExtractError):
     """Can't guess the RSA key format."""
+
     pass
+
 
 def module(name):
     def decorator(func):

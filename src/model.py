@@ -259,7 +259,7 @@ class IocCollection:
             try:
                 port_val = int(port)
             except ValueError:
-                log.warn("Failed to add URL from host_port")    
+                log.warn("Failed to add URL from host_port")
                 return
         else:
             port_val = port
