@@ -1,9 +1,9 @@
+import logging
 import string
 from base64 import b64decode
 from typing import Any, Dict, List
-import logging
 
-from .errors import ModuleAlreadyRegisteredError, IocExtractError
+from .errors import IocExtractError, ModuleAlreadyRegisteredError
 from .model import EcdsaCurve, IocCollection, LocationType, RsaKey
 
 modules: Dict[str, Any] = {}
