@@ -10,13 +10,13 @@ modules: Dict[str, Any] = {}
 log = logging.getLogger(__name__)
 
 
-class CantFindAHostForTheDomain(IocExtractError):
+class CantFindHostForDomain(IocExtractError):
     """Can't find a host for the domain when adding url."""
 
     pass
 
 
-class DomainHasToBeAStringOrADict(IocExtractError):
+class InvalidDomainObject(IocExtractError):
     """Adding URL from something other than string or a dict."""
 
     pass
@@ -67,9 +67,9 @@ def add_url(iocs: IocCollection, config: Dict[str, Any], key: str) -> None:
                         iocs.try_add_url(domain[hostkey])
                     break
             else:
-                raise CantFindAHostForTheDomain()
+                raise CantFindHostForDomain()
         else:
-            raise DomainHasToBeAStringOrADict()
+            raise InvalidDomainObject()
 
 
 def add_rsa_key(iocs: IocCollection, config: Dict, key: str) -> None:
