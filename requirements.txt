@@ -2,3 +2,4 @@ pycryptodomex
 malduck
 pymisp
 mwdblib>=3.3.0
+maco

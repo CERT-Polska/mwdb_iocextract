@@ -338,13 +338,13 @@ class IocCollection:
     def to_maco(self) -> model.ExtractorModel:
         output = model.ExtractorModel(family=self.family)
 
-        for key in self.rsa_keys:
+        for rsakey in self.rsa_keys:
             obj = model.ExtractorModel.Encryption(
                 algorithm="rsa",
-                public_key=str((key.n, key.e)),
+                public_key=str((rsakey.n, rsakey.e)),
             )
-            if key.d:
-                obj.key = str((key.n, key.d))
+            if rsakey.d:
+                obj.key = str((rsakey.n, rsakey.d))
             output.encryption.append(obj)
 
         for curve in self.ecdsa_curves:
