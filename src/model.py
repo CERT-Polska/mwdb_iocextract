@@ -5,9 +5,9 @@ from typing import List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
 from Cryptodome.PublicKey import RSA  # type: ignore
+from maco import model
 from malduck import base64, rsa  # type: ignore
 from pymisp import MISPAttribute, MISPObject  # type: ignore
-from maco import model
 
 from .errors import IocExtractError
 
