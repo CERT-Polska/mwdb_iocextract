@@ -233,7 +233,7 @@ class IocCollection:
             if pem:
                 self.add_rsa_key(RsaKey.parse_pem(pem))
         except IocExtractError:
-            log.warn("Failed to parse a RSA key from PEM")
+            log.warning("Failed to parse a RSA key from PEM")
 
     def try_add_rsa_from_asn1_bytes(self, blob: bytes) -> None:
         pem = PUBKEY_PEM_TEMPLATE.format(b64encode(blob).decode())
