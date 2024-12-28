@@ -161,16 +161,14 @@ def parse(config: Dict[str, Any], iocs: IocCollection) -> None:
 
 
 @module("netwire")
-def parse_netwire(config: Dict[str, Any]) -> IocCollection:
+def parse_netwire(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "mutex" in config and isinstance(config["mutex"], bool):
         # netwire "mutex" is bool for some reason
         del config["mutex"]
-    return IocCollection()
 
 
 @module("quasarrat")
-def parse_quasarrat(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_quasarrat(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "encryption_key" in config:
         iocs.add_password(config["encryption_key"])
         del config["encryption_key"]
@@ -178,166 +176,129 @@ def parse_quasarrat(config: Dict[str, Any]) -> IocCollection:
     if "install_name" in config:
         iocs.add_drop_filename(config["install_name"])
 
-    return iocs
-
 
 @module("hawkeye")
-def parse_hawkeye(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
-
+def parse_hawkeye(config: Dict[str, Any], iocs: IocCollection) -> None:
     if config.get("EmailUsername"):
         iocs.add_email_to(config["EmailUsername"])
 
-    return iocs
-
 
 @module("trickbot")
-def parse_trickbot(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_trickbot(config: Dict[str, Any], iocs: IocCollection) -> None:
     if config.get("public_key"):
         ecdsa = config["public_key"]
         iocs.add_ecdsa_curve(
             EcdsaCurve(ecdsa["t"], int(ecdsa["x"]), int(ecdsa["y"])),
         )
         del config["public_key"]
-    return iocs
 
 
 @module("ramnit")
-def parse_ramnit(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_ramnit(config: Dict[str, Any], iocs: IocCollection) -> None:
     for domain in config.get("hardcoded_domain", []):
         iocs.try_add_url(domain)
-    return iocs
 
 
 @module("legionloader")
-def parse_legionloader(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_legionloader(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "stealer" in config:
         iocs.try_add_url(config["stealer"])
     for drop in config.get("drops", []):
         iocs.try_add_url(drop, location_type=LocationType.DOWNLOAD_URL)
-    return iocs
 
 
 @module("panda")
-def parse_panda(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_panda(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "comm_public_key" in config:
         if type(config["comm_public_key"]) == str:
             iocs.try_add_rsa_from_pem(config["comm_public_key"])
         elif type(config["comm_public_key"]) == dict:
             key = config["comm_public_key"]
             iocs.add_rsa_key(RsaKey(int(key["n"]), int(key["e"])))
-    return iocs
 
 
 @module("danabot")
-def parse_vjworm(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_vjworm(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "rsa_key" in config:
         iocs.try_add_rsa_from_base64(config["rsa_key"])
         del config["rsa_key"]
-    return iocs
 
 
 @module("nymaim")
-def parse_nymaim(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_nymaim(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "urls" in config:
         for url in config["urls"]:
             url = url.replace("]", "")  # some mistakes cannot be unmade
             iocs.try_add_url(url)
         del config["urls"]
-    return iocs
 
 
 @module("zeus")
-def parse_zeus(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_zeus(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "rc4sbox" in config:
         iocs.add_key("rc4", config["rc4sbox"])
-    return iocs
 
 
 @module("vmzeus")
-def parse_vmzeus(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_vmzeus(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "rc4sbox" in config:
         iocs.add_key("rc4", config["rc4sbox"])
     if "rc6sbox" in config:
         iocs.add_key("rc6", config["rc6sbox"])
-    return iocs
 
 
 @module("sendsafe")
-def parse_sendsafe(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_sendsafe(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "cnc" in config and "http_port" in config:
         iocs.add_host_port(config["cnc"], int(config["http_port"]))
         del config["cnc"]
         del config["http_port"]
-    return iocs
 
 
 @module("necurs")
-def parse_necurs(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_necurs(config: Dict[str, Any], iocs: IocCollection) -> None:
     add_rsa_key(iocs, config, "c2_public_key")
-    return iocs
 
 
 @module("isfb")
-def parse_isfb(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_isfb(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "key" in config:
         # "key" key is a serpent key
         iocs.add_key("serpent", "key")
         del config["key"]
-    return iocs
 
 
 @module("guloader")
-def parse_guloader(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_guloader(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "key" in config:
         # "key" key is a xor key
         iocs.add_key("xor", "key")
         del config["key"]
-    return iocs
 
 
 @module("pushdo")
-def parse_pushdo(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_pushdo(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "cfgkey" in config:
         add_rsa_key(iocs, config, "cfgkey")
         del config["cfgkey"]
-    return iocs
 
 
 @module("locky")
-def parse_locky(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_locky(config: Dict[str, Any], iocs: IocCollection) -> None:
     for payment_domain in config["payment_domain"]:
         iocs.try_add_url(payment_domain)
-    return iocs
 
 
 @module("cerber")
-def parse_cerber(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_cerber(config: Dict[str, Any], iocs: IocCollection) -> None:
     for dpurl in config.get("default_payment_url", []):
         iocs.try_add_url(dpurl)
     if "global_public_key" in config:
         iocs.try_add_rsa_from_base64(config["global_public_key"])
-    return iocs
 
 
 @module("kbot")
-def parse_kbot(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_kbot(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "public_key" in config:
         pk = config["public_key"]
         if isinstance(pk, list) and pk and isinstance(pk[-1], int):
@@ -347,20 +308,15 @@ def parse_kbot(config: Dict[str, Any]) -> IocCollection:
         iocs.add_key("other", config["serverpub"])
     if "botcommunity" in config:
         iocs.add_campaign_id(config["botcommunity"])
-    return iocs
 
 
 @module("alien")
-def parse_alien(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
+def parse_alien(config: Dict[str, Any], iocs: IocCollection) -> None:
     add_url(iocs, config, "C2 alt")
-    return iocs
 
 
 @module("lockbit")
-def parse_lockbit(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
-
+def parse_lockbit(config: Dict[str, Any], iocs: IocCollection) -> None:
     # as far as I can tell, this is a custom format used by lockbit
     if "rsa_pub" in config:
         try:
@@ -374,13 +330,9 @@ def parse_lockbit(config: Dict[str, Any]) -> IocCollection:
         except Exception:
             pass
 
-    return iocs
-
 
 @module("agenttesla")
-def parse_agenttesla(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
-
+def parse_agenttesla(config: Dict[str, Any], iocs: IocCollection) -> None:
     if config.get("email"):
         iocs.add_email_from(config["email"])
         del config["email"]
@@ -389,13 +341,9 @@ def parse_agenttesla(config: Dict[str, Any]) -> IocCollection:
         iocs.add_email_to(config["email_to"])
         del config["email_to"]
 
-    return iocs
-
 
 @module("formbook")
-def parse_formbook(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
-
+def parse_formbook(config: Dict[str, Any], iocs: IocCollection) -> None:
     if "urls" in config:
         del config["urls"]
 
@@ -403,13 +351,9 @@ def parse_formbook(config: Dict[str, Any]) -> IocCollection:
         iocs.try_add_url(config["c2_url"])
         del config["c2_url"]
 
-    return iocs
-
 
 @module("cobaltstrike")
-def parse_cobaltstrike(config: Dict[str, Any]) -> IocCollection:
-    iocs = IocCollection()
-
+def parse_cobaltstrike(config: Dict[str, Any], iocs: IocCollection) -> None:
     if config.get("payload_type", "").endswith("stager"):
         for url_row in config.get("stager_url", []):
             url = url_row["url"]
@@ -426,5 +370,3 @@ def parse_cobaltstrike(config: Dict[str, Any]) -> IocCollection:
                 iocs.try_add_url(f"{scheme}://{hostname}:{port}{path}")
 
             del config["urls"]
-
-    return iocs

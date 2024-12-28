@@ -5,6 +5,7 @@ from typing import List, Optional, Tuple, Union, cast
 from urllib.parse import urlparse
 
 from Cryptodome.PublicKey import RSA  # type: ignore
+from maco import model  # type: ignore
 from malduck import base64, rsa  # type: ignore
 from pymisp import MISPAttribute, MISPObject  # type: ignore
 
@@ -201,8 +202,9 @@ class NetworkLocation:
 class IocCollection:
     """Represents a collection of parsed IoCs"""
 
-    def __init__(self) -> None:
+    def __init__(self, family: str) -> None:
         """Creates an empty IocCollection instance"""
+        self.family = family
         self.rsa_keys: List[RsaKey] = []
         self.ecdsa_curves: List[EcdsaCurve] = []
         self.keys: List[Tuple[str, str]] = []  # (keytype, hexencoded key)
@@ -331,8 +333,82 @@ class IocCollection:
 
         # filter out objects without any attributes
         to_return = list(filter(lambda x: bool(x.attributes), to_return))
-
         return to_return
+
+    def to_maco(self) -> model.ExtractorModel:
+        output = model.ExtractorModel(family=self.family)
+
+        for rsakey in self.rsa_keys:
+            obj = model.ExtractorModel.Encryption(
+                algorithm="rsa",
+                public_key=str((rsakey.n, rsakey.e)),
+            )
+            if rsakey.d:
+                obj.key = str((rsakey.n, rsakey.d))
+            output.encryption.append(obj)
+
+        for curve in self.ecdsa_curves:
+            output.encryption.append(
+                model.ExtractorModel.Encryption(
+                    algorithm=curve.t,  # for example, "ecdsa_pub_p384"
+                    public_key=str((curve.x, curve.y)),
+                )
+            )
+
+        for key in self.keys:
+            output.encryption.append(
+                model.ExtractorModel.Encryption(
+                    algorithm=key[0],
+                    key=key[1],
+                )
+            )
+
+        for password in self.passwords:
+            output.password.append(password)
+
+        def location_type_to_maco(location_type: LocationType) -> str:
+            if location_type in [LocationType.CNC, LocationType.PANEL]:
+                # Panel is not 100% technically correct here
+                return "c2"
+            elif location_type == LocationType.DOWNLOAD_URL:
+                return "download"
+            elif location_type in [LocationType.OTHER, LocationType.PEER]:
+                return "other"
+            else:
+                raise ValueError(f"Unknown location type: {location_type}")
+
+        for netloc in self.network_locations:
+            if netloc.scheme in ["https", "http"]:
+                output.http.append(
+                    model.ExtractorModel.Http(
+                        protocol=netloc.scheme,
+                        uri=netloc.url.geturl(),
+                        usage=location_type_to_maco(netloc.location_type),
+                    )
+                )
+            else:
+                output.tcp.append(
+                    model.ExtractorModel.Connection(
+                        server_ip=netloc.url.hostname,
+                        server_port=netloc.port,
+                    )
+                )
+
+        for mutex in self.mutexes:
+            output.mutex.append(mutex)
+
+        for filename in self.dropped_filenames:
+            output.paths.append(filename)
+
+        # Not supported by Maco
+        # for email in self.emails_to + self.emails_from:
+        #     output.emails.append(email)
+
+        # Not supported by Maco
+        # for message in self.ransom_messages:
+        #     output.messages.append(message)
+
+        return output.model_dump(exclude_defaults=True)
 
     def prettyprint(self) -> str:
         """Pretty print for debugging"""
