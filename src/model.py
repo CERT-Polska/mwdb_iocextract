@@ -344,7 +344,7 @@ class IocCollection:
                 public_key=str((key.n, key.e)),
             )
             if key.d:
-                obj.private_key = str((key.n, key.d))
+                obj.key = str((key.n, key.d))
             output.encryption.append(obj)
 
         for curve in self.ecdsa_curves:
@@ -364,7 +364,7 @@ class IocCollection:
             )
 
         for password in self.passwords:
-            output.passwords.append(password)
+            output.password.append(password)
 
         def location_type_to_maco(location_type: LocationType) -> str:
             if location_type in [LocationType.CNC, LocationType.PANEL]:
@@ -389,10 +389,8 @@ class IocCollection:
             else:
                 output.tcp.append(
                     model.ExtractorModel.Connection(
-                        protocol=netloc.scheme,
-                        host=netloc.url.hostname,
-                        port=netloc.port,
-                        usage=location_type_to_maco(netloc.location_type),
+                        server_ip=netloc.url.hostname,
+                        server_port=netloc.port,
                     )
                 )
 
