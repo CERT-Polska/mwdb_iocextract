@@ -33,6 +33,10 @@ class TestParseRegression(unittest.TestCase):
                 print(iocs.prettyprint())
                 self.assertTrue(False)
 
+            # Ensure conversions doesn't throw an exception
+            iocs.to_misp()
+            iocs.to_maco()
+
 
 if __name__ == "__main__":
     unittest.main()
