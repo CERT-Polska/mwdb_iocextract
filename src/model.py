@@ -241,7 +241,7 @@ class IocCollection:
         try:
             self.add_rsa_key(RsaKey.parse_pem(pem))
         except IocExtractError:
-            log.warn("Failed to parse a RSA key from ASN1")
+            log.warning("Failed to parse a RSA key from ASN1")
 
     def try_add_rsa_from_base64(self, pem: str) -> None:
         try:
