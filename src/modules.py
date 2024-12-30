@@ -124,7 +124,7 @@ def parse(config: Dict[str, Any], iocs: IocCollection) -> None:
         try:
             add_rsa_key(iocs, config, name)
         except UnknownRsaKeyType:
-            log.warn("Unknown RSA key type")
+            log.warning("Unknown RSA key type")
 
     for name in [
         "urls",
@@ -390,7 +390,7 @@ def parse_lockbit(config: Dict[str, Any]) -> IocCollection:
                 iocs.add_rsa_key(RsaKey(n=n, e=e))
                 del config["rsa_pub"]
         except Exception:
-            log.warn("Failed to parse a lockbit key")
+            log.warning("Failed to parse a lockbit key")
 
     return iocs
 

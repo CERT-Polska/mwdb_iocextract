@@ -247,7 +247,7 @@ class IocCollection:
         try:
             self.add_rsa_key(RsaKey.parse_base64(pem))
         except IocExtractError:
-            log.warn("Failed to parse a RSA key from base64")
+            log.warning("Failed to parse a RSA key from base64")
 
     def add_network_location(self, netloc: NetworkLocation) -> None:
         self.network_locations.append(netloc)
@@ -259,14 +259,14 @@ class IocCollection:
             try:
                 port_val = int(port)
             except ValueError:
-                log.warn("Failed to add URL from host_port")
+                log.warning("Failed to add URL from host_port")
                 return
         else:
             port_val = port
         try:
             self.try_add_url(f"{schema}://{host}:{port_val}")
         except IocExtractError:
-            log.warn("Failed to add URL from host_port")
+            log.warning("Failed to add URL from host_port")
 
     def try_add_url(
         self, url: str, location_type: LocationType = LocationType.CNC
@@ -278,7 +278,7 @@ class IocCollection:
                 NetworkLocation(url, location_type=location_type)
             )
         except IocExtractError:
-            log.warn("Failed to add URL directly")
+            log.warning("Failed to add URL directly")
 
     def add_password(self, password: str) -> None:
         self.passwords.append(password)
