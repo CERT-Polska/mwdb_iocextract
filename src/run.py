@@ -1,4 +1,5 @@
 import argparse
+import logging
 
 from mwdblib import MWDB  # type: ignore
 
@@ -14,7 +15,15 @@ def main():
     parser.add_argument(
         "config_id", help="Config to parse", default=None, nargs="?"
     )
+    parser.add_argument(
+        "-v", "--verbose", help="Print debug logs", action="store_true"
+    )
     args = parser.parse_args()
+
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
 
     mwdb = MWDB()
     mwdb.login(args.mwdb_user, args.mwdb_pass)
@@ -28,9 +37,10 @@ def main():
     for cfg in mwdb.recent_configs():
         if cfg.type != "static":
             continue
-        print(cfg.id)
+        print(cfg.family, cfg.id)
         iocs = parse(cfg.family, cfg.cfg)
         print(iocs.prettyprint())
+        print()
         continue
 
 

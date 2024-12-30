@@ -6,9 +6,12 @@ from .model import IocCollection
 
 def parse(family: str, config: Dict[str, Any]) -> IocCollection:
     iocs = IocCollection()
+
+    # Handlers for special-cased families
     if family in modules.modules:
         iocs = modules.modules[family](config)
 
+    # Generic parser for the rest of the fields
     modules.parse(config, iocs)
 
     return iocs

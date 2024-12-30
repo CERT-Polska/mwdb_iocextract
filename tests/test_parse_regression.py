@@ -1,7 +1,8 @@
-import unittest
 import json
-from src.api import parse
 import os
+import unittest
+
+from src.api import parse
 
 
 class TestParseRegression(unittest.TestCase):

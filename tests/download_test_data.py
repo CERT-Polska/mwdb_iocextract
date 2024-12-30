@@ -1,6 +1,7 @@
 import argparse
-import os
 import json
+import os
+
 from mwdblib import Malwarecage, MalwarecageConfig  # type: ignore
 
 
