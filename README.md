@@ -200,9 +200,7 @@ Config keys: `drop_name`.
 
 If you want to extend this library or add support for more modules, feel free to
 contribute to this repository. We're only interested in modules at least
-partially publicly accessible. So [mwcfg.info](http://mwcfg.info/) module
-support is OK to merge, but your in-house internal TLP:RED modules - probably
-no.
+partially publicly accessible.
 
 ## Usage
 
@@ -212,13 +210,13 @@ How to download config from mwdb and parse it:
 
 ```python
 from mwdb_iocextract import parse
-from mwdblib import Malwarecage
+from mwdblib import MWDB
 
 
 def main():
     # See also https://mwdblib.readthedocs.io/en/latest/index.html
-    mwdb = Malwarecage()
-    mwdb.login("msm", "my_secret_password")
+    mwdb = MWDB()
+    mwdb.login("user", "my_secret_password")
 
     for cfg in mwdb.recent_configs():
         if cfg.type != "static":
