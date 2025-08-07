@@ -120,6 +120,7 @@ def parse(config: Dict[str, Any], iocs: IocCollection) -> None:
         "host",
         "cncurl",
         "dropper",
+        "server",
     ]:
         add_url(iocs, config, name)
 
